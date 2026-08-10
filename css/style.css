@@ -676,23 +676,22 @@ button {
   margin-top: 0.2rem;
 }
 
-/* Fixed Hero Deal Card Dimensions (No resizing on image change) */
+/* Fixed Hero Deal Card Dimensions & Clean Non-Overlapping Layout */
 .hero-products-container {
   width: 100%;
   max-width: 440px;
-  min-height: 480px;
-  height: 480px;
   margin: 0 auto;
   position: relative;
   display: flex;
   flex-direction: column;
+  gap: 1rem;
 }
 
 .hero-slideshow-card {
   width: 100%;
-  height: 440px;
-  min-height: 440px;
-  max-height: 440px;
+  height: 430px;
+  min-height: 430px;
+  max-height: 430px;
   background: #FFFFFF;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
@@ -705,9 +704,9 @@ button {
 
 .hero-slideshow-img-box {
   width: 100%;
-  height: 220px;
-  min-height: 220px;
-  max-height: 220px;
+  height: 210px;
+  min-height: 210px;
+  max-height: 210px;
   overflow: hidden;
   position: relative;
   background: #F8F9FA;
@@ -809,18 +808,19 @@ button {
 }
 
 .hero-badge-floating {
-  position: absolute;
-  bottom: 1.5rem;
-  left: 1.5rem;
+  position: relative;
+  bottom: auto;
+  left: auto;
   display: flex;
   align-items: center;
   gap: 0.75rem;
   padding: 0.85rem 1.25rem;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.96);
   border: 1px solid var(--border-color);
-  backdrop-filter: blur(12px);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-soft);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  z-index: 5;
+  width: 100%;
 }
 
 .badge-icon {

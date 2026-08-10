@@ -5,7 +5,7 @@
    ========================================================================== */
 
 const productsData = [
-  // --- 1. RICE, WHEAT, SUGAR & TEA ESSENTIALS ---
+  // --- 1. SUGAR, TEA, WHEAT & RICE ESSENTIALS ---
   {
     id: "prod-1",
     name: "Aashirvaad Shuddha Whole Wheat Atta",
@@ -33,7 +33,7 @@ const productsData = [
     availability: "In Stock",
     badge: "Sulphur Free",
     featuredHero: true,
-    image: "https://images.unsplash.com/photo-1581441363689-1f3c3c414635?auto=format&fit=crop&q=80&w=800",
+    image: "images/sugar_pack.png",
     description: "Sulphur-free, untouched crystal white sugar refined with modern international standards."
   },
   {
@@ -48,7 +48,7 @@ const productsData = [
     availability: "In Stock",
     badge: "Rich Aroma",
     featuredHero: true,
-    image: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&q=80&w=800",
+    image: "images/tata_tea.png",
     description: "Exquisite blend of fine Assam tea leaves with gently rolled long leaves for rich taste."
   },
   {
@@ -79,6 +79,48 @@ const productsData = [
     badge: "Daily Essential",
     image: "images/basmati_rice.png",
     description: "Lightweight, aromatic medium-grain rice perfect for daily household consumption and catering."
+  },
+  {
+    id: "prod-25",
+    name: "Fortune Chakki Fresh Whole Wheat Atta",
+    brand: "Fortune",
+    category: "sugar_tea",
+    categoryLabel: "Sugar, Tea, Wheat & Rice",
+    weight: "10kg Bag",
+    price: 395,
+    unit: "bag",
+    availability: "In Stock",
+    badge: "Soft Rotis",
+    image: "images/wheat_atta.png",
+    description: "100% whole wheat chakki fresh atta for delicious and healthy daily rotis."
+  },
+  {
+    id: "prod-26",
+    name: "Daawat Rozana Super Basmati Rice",
+    brand: "Daawat",
+    category: "sugar_tea",
+    categoryLabel: "Sugar, Tea, Wheat & Rice",
+    weight: "5kg Saver Pack",
+    price: 490,
+    unit: "pack",
+    availability: "In Stock",
+    badge: "Long Grain",
+    image: "images/basmati_rice.png",
+    description: "Everyday Basmati rice with delightful aroma and delicious taste for your family."
+  },
+  {
+    id: "prod-27",
+    name: "Wagh Bakri Premium Leaf Tea",
+    brand: "Wagh Bakri",
+    category: "sugar_tea",
+    categoryLabel: "Sugar, Tea, Wheat & Rice",
+    weight: "500g Pack",
+    price: 260,
+    unit: "pack",
+    availability: "In Stock",
+    badge: "Strong Chai",
+    image: "images/tata_tea.png",
+    description: "Strong, aromatic Gujarat Assam leaf tea for perfect morning tea time."
   },
 
   // --- 2. FRESH VEGETABLES & FRUITS ---
@@ -153,6 +195,48 @@ const productsData = [
     image: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&q=80&w=800",
     description: "Juicy, sweet orchard-fresh Shimla red apples rich in antioxidants and fiber."
   },
+  {
+    id: "prod-28",
+    name: "Fresh Yellow Lemons & Mint Combo",
+    brand: "Farm Fresh",
+    category: "vegetables",
+    categoryLabel: "Fresh Vegetables & Fruits",
+    weight: "500g Pack",
+    price: 45,
+    unit: "pack",
+    availability: "In Stock",
+    badge: "Vitamin C",
+    image: "images/fresh_vegetables.png",
+    description: "Juicy yellow lemons and fragrant mint leaves for refreshing juices and cooking."
+  },
+  {
+    id: "prod-29",
+    name: "Organic Palak & Spinach Greens",
+    brand: "Organic Farm",
+    category: "vegetables",
+    categoryLabel: "Fresh Vegetables & Fruits",
+    weight: "1kg Bundle",
+    price: 50,
+    unit: "kg",
+    availability: "In Stock",
+    badge: "Iron Rich",
+    image: "images/fresh_vegetables.png",
+    description: "Tender green spinach leaves packed with vitamins, iron, and natural minerals."
+  },
+  {
+    id: "prod-30",
+    name: "Fresh Green Peas & Cauliflower Duo",
+    brand: "Farm Fresh",
+    category: "vegetables",
+    categoryLabel: "Fresh Vegetables & Fruits",
+    weight: "2kg Combo",
+    price: 110,
+    unit: "pack",
+    availability: "In Stock",
+    badge: "Fresh Pick",
+    image: "images/fresh_vegetables.png",
+    description: "Sweet green peas pods and crisp white cauliflower heads for healthy meals."
+  },
 
   // --- 3. WAFERS, BISCUITS & SNACKS ---
   {
@@ -226,6 +310,48 @@ const productsData = [
     image: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&q=80&w=800",
     description: "Iconic delicious masala instant noodles fortified with iron for a quick snack."
   },
+  {
+    id: "prod-31",
+    name: "Balaji Simply Salted Potato Wafers",
+    brand: "Balaji",
+    category: "wafers_snacks",
+    categoryLabel: "Wafers, Biscuits & Snacks",
+    weight: "Pack of 5 (5 x 85g)",
+    price: 125,
+    unit: "pack",
+    availability: "In Stock",
+    badge: "Crunchy",
+    image: "images/potato_chips.png",
+    description: "Classic salted crispy potato chips made from selected farm potatoes."
+  },
+  {
+    id: "prod-32",
+    name: "Parle-G Gold Glucose Biscuits Mega Pack",
+    brand: "Parle",
+    category: "wafers_snacks",
+    categoryLabel: "Wafers, Biscuits & Snacks",
+    weight: "1kg Family Pack",
+    price: 120,
+    unit: "pack",
+    availability: "In Stock",
+    badge: "Energy Snack",
+    image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&q=80&w=800",
+    description: "India's favorite glucose biscuit providing instant energy and nostalgia."
+  },
+  {
+    id: "prod-33",
+    name: "Kurkure Masala Munch Mega Saver Pack",
+    brand: "Kurkure",
+    category: "wafers_snacks",
+    categoryLabel: "Wafers, Biscuits & Snacks",
+    weight: "350g Value Pack",
+    price: 85,
+    unit: "pack",
+    availability: "In Stock",
+    badge: "Chatpata",
+    image: "images/potato_chips.png",
+    description: "Tedhe medhe spicy chatpata corn curls cooked with authentic Indian spices."
+  },
 
   // --- 4. COOKING OILS & GHEE ---
   {
@@ -268,8 +394,50 @@ const productsData = [
     unit: "tin",
     availability: "In Stock",
     badge: "Pure Ghee",
-    image: "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?auto=format&fit=crop&q=80&w=800",
+    image: "images/amul_ghee.png",
     description: "Traditional Amul cow ghee with granular texture, natural aroma, and rich flavor."
+  },
+  {
+    id: "prod-34",
+    name: "Gemini Refined Soybean Cooking Oil",
+    brand: "Gemini",
+    category: "oil",
+    categoryLabel: "Cooking Oil & Ghee",
+    weight: "15L Box Container",
+    price: 1620,
+    unit: "pack",
+    availability: "In Stock",
+    badge: "Heart Healthy",
+    image: "images/sunflower_oil.png",
+    description: "Pure refined soybean cooking oil fortified with Vitamin A and D."
+  },
+  {
+    id: "prod-35",
+    name: "Saffola Gold Pro Healthy Heart Oil",
+    brand: "Saffola",
+    category: "oil",
+    categoryLabel: "Cooking Oil & Ghee",
+    weight: "5L Can",
+    price: 890,
+    unit: "can",
+    availability: "In Stock",
+    badge: "Low Absorb",
+    image: "images/sunflower_oil.png",
+    description: "Dual seed technology oil with Oryzanol for superior heart health and immunity."
+  },
+  {
+    id: "prod-36",
+    name: "Gowardhan Pure Cow Ghee 1L Tin",
+    brand: "Gowardhan",
+    category: "oil",
+    categoryLabel: "Cooking Oil & Ghee",
+    weight: "1L Tin",
+    price: 670,
+    unit: "tin",
+    availability: "In Stock",
+    badge: "Granular Ghee",
+    image: "images/amul_ghee.png",
+    description: "100% pure cow ghee churned from fresh cow milk with rich traditional taste."
   },
 
   // --- 5. PULSES & DAL ---
@@ -284,7 +452,7 @@ const productsData = [
     unit: "pack",
     availability: "In Stock",
     badge: "Direct Mill",
-    image: "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&q=80&w=800",
+    image: "images/toor_dal.png",
     description: "Unpolished, nutrient-dense yellow toor dal free from artificial colors or oil coatings."
   },
   {
@@ -300,6 +468,62 @@ const productsData = [
     badge: "High Protein",
     image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=800",
     description: "Easy to digest yellow moong dal, rich in protein and ideal for daily khichdi and soups."
+  },
+  {
+    id: "prod-37",
+    name: "Tata Sampann Unpolished Chana Dal",
+    brand: "Tata Sampann",
+    category: "pulses",
+    categoryLabel: "Pulses & Dal",
+    weight: "1kg Pack",
+    price: 115,
+    unit: "pack",
+    availability: "In Stock",
+    badge: "Rich Protein",
+    image: "images/toor_dal.png",
+    description: "Unpolished split Bengal gram dal curated by chef Sanjeev Kapoor."
+  },
+  {
+    id: "prod-38",
+    name: "Black Urad Dal Whole (Kali Dal)",
+    brand: "Hanuman Select",
+    category: "pulses",
+    categoryLabel: "Pulses & Dal",
+    weight: "2kg Pack",
+    price: 250,
+    unit: "pack",
+    availability: "In Stock",
+    badge: "Dal Makhani",
+    image: "images/toor_dal.png",
+    description: "Whole black gram lentils perfect for creamy Punjabi Dal Makhani."
+  },
+  {
+    id: "prod-39",
+    name: "Premium Chitra Rajma Kidney Beans",
+    brand: "Hanuman Select",
+    category: "pulses",
+    categoryLabel: "Pulses & Dal",
+    weight: "2kg Pack",
+    price: 280,
+    unit: "pack",
+    availability: "In Stock",
+    badge: "High Fiber",
+    image: "images/toor_dal.png",
+    description: "Superior quality spotted Jammu Chitra Rajma beans that cook soft and flavorful."
+  },
+  {
+    id: "prod-40",
+    name: "Pure Masoor Red Split Dal",
+    brand: "Hanuman Select",
+    category: "pulses",
+    categoryLabel: "Pulses & Dal",
+    weight: "2kg Pack",
+    price: 190,
+    unit: "pack",
+    availability: "In Stock",
+    badge: "Quick Cook",
+    image: "images/toor_dal.png",
+    description: "Quick cooking red split lentils loaded with natural iron and dietary fiber."
   },
 
   // --- 6. SPICES & DRY FRUITS ---
@@ -319,6 +543,64 @@ const productsData = [
     description: "High-curcumin turmeric powder and fiery red chili powder with natural oils preserved."
   },
   {
+    id: "prod-41",
+    name: "MDH Kitchen King & Garam Masala Duo",
+    brand: "MDH",
+    category: "spices",
+    categoryLabel: "Spices & Masala",
+    weight: "200g Combo Pack",
+    price: 165,
+    unit: "pack",
+    availability: "In Stock",
+    badge: "Authentic Spice",
+    image: "images/spices_combo.png",
+    description: "Aromatic blend of ground spices for rich North Indian curries and gravy."
+  },
+  {
+    id: "prod-42",
+    name: "Catch Cumin Powder & Cumin Seeds Combo",
+    brand: "Catch",
+    category: "spices",
+    categoryLabel: "Spices & Masala",
+    weight: "400g Pack",
+    price: 190,
+    unit: "pack",
+    availability: "In Stock",
+    badge: "Pure Jeera",
+    image: "images/spices_combo.png",
+    description: "Aromatic whole jeera seeds and finely ground cumin powder."
+  },
+  {
+    id: "prod-43",
+    name: "Tata Sampann Coriander Powder (Dhania)",
+    brand: "Tata Sampann",
+    category: "spices",
+    categoryLabel: "Spices & Masala",
+    weight: "500g Pack",
+    price: 135,
+    unit: "pack",
+    availability: "In Stock",
+    badge: "Natural Oils",
+    image: "images/spices_combo.png",
+    description: "Cooling aromatic coriander powder milled from whole green seeds."
+  },
+  {
+    id: "prod-44",
+    name: "Badshah Shahi Biryani Masala",
+    brand: "Badshah",
+    category: "spices",
+    categoryLabel: "Spices & Masala",
+    weight: "100g Pack",
+    price: 75,
+    unit: "pack",
+    availability: "In Stock",
+    badge: "Royal Taste",
+    image: "images/spices_combo.png",
+    description: "Royal spice mix for restaurant-style vegetable and Hyderabadi biryani."
+  },
+
+  // --- 7. DRY FRUITS & NUTS ---
+  {
     id: "prod-22",
     name: "Royal Jumbo Cashews & Almonds Twin Pack",
     brand: "Hanuman Select",
@@ -332,8 +614,64 @@ const productsData = [
     image: "https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&q=80&w=800",
     description: "Whole W240 jumbo cashews and crunchy California almonds packed in vacuum zip pouches."
   },
+  {
+    id: "prod-46",
+    name: "Nutraj Premium California Whole Almonds",
+    brand: "Nutraj",
+    category: "dryfruits",
+    categoryLabel: "Dry Fruits & Nuts",
+    weight: "1kg Vacuum Pack",
+    price: 750,
+    unit: "pack",
+    availability: "In Stock",
+    badge: "100% Natural",
+    image: "https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&q=80&w=800",
+    description: "Raw crunch California badam high in Vitamin E and healthy omega fats."
+  },
+  {
+    id: "prod-47",
+    name: "Happilo W240 Jumbo Cashew Nuts (Kaju)",
+    brand: "Happilo",
+    category: "dryfruits",
+    categoryLabel: "Dry Fruits & Nuts",
+    weight: "500g Pouch",
+    price: 490,
+    unit: "pack",
+    availability: "In Stock",
+    badge: "King Size",
+    image: "https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&q=80&w=800",
+    description: "Large, buttery whole cashews handpicked for festive gifting and snacking."
+  },
+  {
+    id: "prod-48",
+    name: "Organic Green Sweet Raisins (Kishmish)",
+    brand: "Organic Choice",
+    category: "dryfruits",
+    categoryLabel: "Dry Fruits & Nuts",
+    weight: "1kg Pack",
+    price: 320,
+    unit: "pack",
+    availability: "In Stock",
+    badge: "Juicy Sweet",
+    image: "https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&q=80&w=800",
+    description: "Naturally sun-dried sweet green raisins free from added sugar or sulfur."
+  },
+  {
+    id: "prod-49",
+    name: "Royal Salted Roasted Pistachios (Pista)",
+    brand: "Hanuman Select",
+    category: "dryfruits",
+    categoryLabel: "Dry Fruits & Nuts",
+    weight: "500g Pack",
+    price: 540,
+    unit: "pack",
+    availability: "In Stock",
+    badge: "Lightly Salted",
+    image: "https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&q=80&w=800",
+    description: "In-shell Iranian roasted pistachios seasoned with rock salt."
+  },
 
-  // --- 7. CLEANING & PERSONAL CARE ---
+  // --- 8. CLEANING & HOUSEHOLD CARE ---
   {
     id: "prod-23",
     name: "Surf Excel Easy Wash Detergent Powder",
@@ -349,6 +687,64 @@ const productsData = [
     description: "Superior stain removal power that dissolves fast and cleans clothes effortlessly."
   },
   {
+    id: "prod-51",
+    name: "Vim Lemon Dishwash Liquid Gel",
+    brand: "Vim",
+    category: "cleaning",
+    categoryLabel: "Cleaning & Household",
+    weight: "750ml Bottle",
+    price: 175,
+    unit: "bottle",
+    availability: "In Stock",
+    badge: "Grease Removal",
+    image: "https://images.unsplash.com/photo-1585832770485-e68a5fc88240?auto=format&fit=crop&q=80&w=800",
+    description: "Concentrated lemon gel power that removes tough grease from utensils in one stroke."
+  },
+  {
+    id: "prod-52",
+    name: "Lizol Disinfectant Surface Cleaner Citrus",
+    brand: "Lizol",
+    category: "cleaning",
+    categoryLabel: "Cleaning & Household",
+    weight: "2L Bottle",
+    price: 340,
+    unit: "bottle",
+    availability: "In Stock",
+    badge: "99.9% Germ Kill",
+    image: "https://images.unsplash.com/photo-1585832770485-e68a5fc88240?auto=format&fit=crop&q=80&w=800",
+    description: "10x better cleaning floor cleaner providing citrus freshness and germ protection."
+  },
+  {
+    id: "prod-53",
+    name: "Harpic Power Plus Toilet Cleaner Twin Pack",
+    brand: "Harpic",
+    category: "cleaning",
+    categoryLabel: "Cleaning & Household",
+    weight: "2 x 1L Pack",
+    price: 320,
+    unit: "pack",
+    availability: "In Stock",
+    badge: "Max Clean",
+    image: "https://images.unsplash.com/photo-1585832770485-e68a5fc88240?auto=format&fit=crop&q=80&w=800",
+    description: "Thick formula toilet disinfectant gel that removes limescale and stains."
+  },
+  {
+    id: "prod-54",
+    name: "Colin Glass & Household Cleaner Spray",
+    brand: "Colin",
+    category: "cleaning",
+    categoryLabel: "Cleaning & Household",
+    weight: "500ml Spray Bottle",
+    price: 110,
+    unit: "bottle",
+    availability: "In Stock",
+    badge: "Shine Boost",
+    image: "https://images.unsplash.com/photo-1585832770485-e68a5fc88240?auto=format&fit=crop&q=80&w=800",
+    description: "Streak-free glass cleaner spray for windows, mirrors, appliances, and tables."
+  },
+
+  // --- 9. PERSONAL CARE & HYGIENE ---
+  {
     id: "prod-24",
     name: "Dettol Original Bath Soap Multipack",
     brand: "Dettol",
@@ -361,6 +757,93 @@ const productsData = [
     badge: "Germ Protection",
     image: "https://images.unsplash.com/photo-1607006482602-76ca0fd2f9c3?auto=format&fit=crop&q=80&w=800",
     description: "Trusted germ protection soap providing 99.9% protection with fresh pine fragrance."
+  },
+  {
+    id: "prod-55",
+    name: "Colgate Strong Teeth Toothpaste Family Saver",
+    brand: "Colgate",
+    category: "personal",
+    categoryLabel: "Personal Care",
+    weight: "500g Saver Pack (2x250g)",
+    price: 230,
+    unit: "pack",
+    availability: "In Stock",
+    badge: "Amino Power",
+    image: "https://images.unsplash.com/photo-1607006482602-76ca0fd2f9c3?auto=format&fit=crop&q=80&w=800",
+    description: "Calcium and Amino Power formula that strengthens teeth naturally."
+  },
+  {
+    id: "prod-56",
+    name: "Clinic Plus Strong & Long Health Shampoo",
+    brand: "Clinic Plus",
+    category: "personal",
+    categoryLabel: "Personal Care",
+    weight: "650ml Bottle",
+    price: 320,
+    unit: "bottle",
+    availability: "In Stock",
+    badge: "Milk Protein",
+    image: "https://images.unsplash.com/photo-1607006482602-76ca0fd2f9c3?auto=format&fit=crop&q=80&w=800",
+    description: "Enriched with milk protein for strong, healthy, and shiny hair."
+  },
+  {
+    id: "prod-57",
+    name: "Nivea Soft Moisturizing Cream Tub",
+    brand: "Nivea",
+    category: "personal",
+    categoryLabel: "Personal Care",
+    weight: "300ml Tub",
+    price: 360,
+    unit: "tub",
+    availability: "In Stock",
+    badge: "Jojoba Oil",
+    image: "https://images.unsplash.com/photo-1607006482602-76ca0fd2f9c3?auto=format&fit=crop&q=80&w=800",
+    description: "Non-greasy light moisturizing cream with Vitamin E and Jojoba oil."
+  },
+  {
+    id: "prod-58",
+    name: "Savlon Antiseptic Disinfectant Liquid",
+    brand: "Savlon",
+    category: "personal",
+    categoryLabel: "Personal Care",
+    weight: "1L Bottle",
+    price: 215,
+    unit: "bottle",
+    availability: "In Stock",
+    badge: "Doctor Recommended",
+    image: "https://images.unsplash.com/photo-1607006482602-76ca0fd2f9c3?auto=format&fit=crop&q=80&w=800",
+    description: "Effective antiseptic protection for wound care, bathing, and laundry."
+  },
+
+  // --- 10. BEST VALUE HOT DEALS & RATION KITS ---
+  {
+    id: "prod-59",
+    name: "Hanuman Monthly Grocery Ration Mega Pack",
+    brand: "Hanuman Super Combo",
+    category: "best_value",
+    categoryLabel: "Best Value Hot Deals",
+    weight: "45kg Mega Combo Pack",
+    price: 4999,
+    unit: "combo",
+    availability: "In Stock",
+    badge: "Super Saver 25%",
+    featuredHero: true,
+    image: "images/wheat_atta.png",
+    description: "Complete monthly grocery kit: 10kg Atta + 10kg Rice + 5kg Sugar + 2kg Toor Dal + 2L Sunflower Oil + Spices & Snacks!"
+  },
+  {
+    id: "prod-60",
+    name: "Farm Fresh Seasonal Vegetable Family Basket",
+    brand: "Farm Fresh",
+    category: "best_value",
+    categoryLabel: "Best Value Hot Deals",
+    weight: "10kg Assorted Basket",
+    price: 399,
+    unit: "basket",
+    availability: "In Stock",
+    badge: "Direct Farm",
+    image: "images/fresh_vegetables.png",
+    description: "3kg Onions + 3kg Potatoes + 2kg Tomatoes + 1kg Ginger/Garlic/Chili + 1kg Seasonal Greens."
   }
 ];
 
@@ -390,4 +873,5 @@ function addNewProductToDataset(prodObj) {
     console.error("Failed to save custom product to localStorage", e);
   }
 }
+
 
