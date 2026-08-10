@@ -284,3 +284,19 @@
   }
 }
 
+/* Eliminate blank space above Get In Touch section on responsive views */
+@media screen and (max-width: 768px) {
+  #products {
+    padding-bottom: 0 !important;
+  }
+  #contact {
+    padding-top: 0.75rem !important;
+    margin-top: 0 !important;
+  }
+  #contact .section-header {
+    margin-top: 0 !important;
+    margin-bottom: 1.25rem !important;
+  }
+}
+
+

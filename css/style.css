@@ -3570,11 +3570,25 @@ button {
 
 #products {
   padding-top: 0.75rem !important;
-  padding-bottom: 0.75rem !important;
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
 }
 
+#productsGrid {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Zero out blank space above Get In Touch Contact section across all screen sizes */
 #contact {
   padding-top: 0.5rem !important;
+  margin-top: 0 !important;
+}
+
+#contact .section-header {
+  margin-top: 0 !important;
+  margin-bottom: 1.25rem !important;
+  padding-top: 0 !important;
 }
 
 /* Minimalist Footer Admin '+' Button */
@@ -3611,6 +3625,7 @@ button {
   box-shadow: 0 8px 25px rgba(99, 91, 255, 0.45);
   background: linear-gradient(135deg, var(--secondary-green) 0%, var(--primary-color) 100%);
 }
+
 
 
 
