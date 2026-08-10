@@ -371,10 +371,16 @@ window.closeAddProductModal = function() {
   }
 };
 
+let newUploadedImageBase64 = '';
+let editUploadedImageBase64 = '';
+
 // Edit Product Modal Trigger & Helper
 window.triggerEditProduct = function(productId) {
   const product = productsData.find(p => p.id === productId);
   if (!product) return;
+
+  newUploadedImageBase64 = '';
+  editUploadedImageBase64 = '';
 
   document.getElementById('editProdId').value = product.id;
   document.getElementById('editProdName').value = product.name;
@@ -385,6 +391,18 @@ window.triggerEditProduct = function(productId) {
   document.getElementById('editProdUnit').value = product.unit;
   document.getElementById('editProdBadge').value = product.badge || 'New Launch';
   document.getElementById('editProdImage').value = product.image;
+
+  const fileInput = document.getElementById('editProdImageFile');
+  if (fileInput) fileInput.value = '';
+
+  const imgPreview = document.getElementById('editProdImagePreview');
+  const statusSpan = document.getElementById('editProdImagePreviewStatus');
+  if (imgPreview) imgPreview.src = product.image;
+  if (statusSpan) {
+    statusSpan.textContent = 'Current product image';
+    statusSpan.style.color = 'var(--text-secondary)';
+    statusSpan.style.fontWeight = 'normal';
+  }
 
   const editModal = document.getElementById('editProductModal');
   if (editModal) {
@@ -401,8 +419,46 @@ window.closeEditProductModal = function() {
   }
 };
 
-// Bind Modal Form Submissions
+// Bind Modal Form Submissions & File Upload Listeners
 document.addEventListener('DOMContentLoaded', () => {
+  // File upload listener for New Product
+  const newFileInput = document.getElementById('newProdImageFile');
+  newFileInput?.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        newUploadedImageBase64 = evt.target.result;
+        const preview = document.getElementById('newProdImagePreview');
+        const previewBox = document.getElementById('newProdImagePreviewBox');
+        if (preview) preview.src = evt.target.result;
+        if (previewBox) previewBox.style.display = 'flex';
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // File upload listener for Edit Product
+  const editFileInput = document.getElementById('editProdImageFile');
+  editFileInput?.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        editUploadedImageBase64 = evt.target.result;
+        const preview = document.getElementById('editProdImagePreview');
+        const statusSpan = document.getElementById('editProdImagePreviewStatus');
+        if (preview) preview.src = evt.target.result;
+        if (statusSpan) {
+          statusSpan.textContent = '✓ New image file attached';
+          statusSpan.style.color = 'var(--success)';
+          statusSpan.style.fontWeight = '600';
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
   // PIN Form Submission
   const pinForm = document.getElementById('pinVerifyForm');
   pinForm?.addEventListener('submit', (e) => {
@@ -441,7 +497,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const price = parseFloat(document.getElementById('newProdPrice').value) || 0;
     const unit = document.getElementById('newProdUnit').value;
     const badge = document.getElementById('newProdBadge').value || 'New Launch';
-    let image = document.getElementById('newProdImage')?.value.trim();
+    let image = newUploadedImageBase64 || document.getElementById('newProdImage')?.value.trim();
 
     if (!name || !brand || !weight || price <= 0) {
       alert('Please fill out all required product fields correctly.');
@@ -497,6 +553,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     closeAddProductModal();
     addProdForm.reset();
+    newUploadedImageBase64 = '';
+    const previewBox = document.getElementById('newProdImagePreviewBox');
+    if (previewBox) previewBox.style.display = 'none';
 
     if (typeof showToastNotification === 'function') {
       showToastNotification(`Successfully published "${name}" to store catalog!`);
@@ -525,7 +584,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const price = parseFloat(document.getElementById('editProdPrice').value) || 0;
     const unit = document.getElementById('editProdUnit').value;
     const badge = document.getElementById('editProdBadge').value;
-    const image = document.getElementById('editProdImage').value.trim();
+    const image = editUploadedImageBase64 || document.getElementById('editProdImage').value.trim();
 
     // Update in-memory product
     productsData[prodIndex].category = category;
@@ -549,6 +608,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderProducts();
 
     closeEditProductModal();
+    editUploadedImageBase64 = '';
 
     if (typeof showToastNotification === 'function') {
       showToastNotification(`Updated "${name}" successfully!`);
@@ -557,3 +617,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
