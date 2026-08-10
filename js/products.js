@@ -699,7 +699,7 @@ const productsData = [
     description: "California inshell roasted pistachios lightly salted for crisp healthy snacking."
   },
 
-  // --- 8. CLEANING & PERSONAL CARE (6 Products) ---
+  // --- 8. CLEANING & PERSONAL CARE (10 Products) ---
   {
     id: "prod-49",
     name: "Surf Excel Easy Wash Detergent Powder",
@@ -711,22 +711,50 @@ const productsData = [
     unit: "pack",
     availability: "In Stock",
     badge: "Tough Stain Removal",
-    image: "https://images.unsplash.com/photo-1585832770485-e68a5fc88240?auto=format&fit=crop&q=80&w=800",
+    image: "images/cleaning_essentials.png",
     description: "Superior stain removal power that dissolves fast and cleans clothes effortlessly."
+  },
+  {
+    id: "prod-49b",
+    name: "Harpic Power Plus Disinfectant Toilet Cleaner",
+    brand: "Harpic",
+    category: "cleaning",
+    categoryLabel: "Cleaning & Household",
+    weight: "1L Bottle",
+    price: 195,
+    unit: "bottle",
+    availability: "In Stock",
+    badge: "10x Cleaning",
+    image: "images/cleaning_essentials.png",
+    description: "Kills 99.9% of germs and removes tough yellow stains for a sparkling clean toilet bowl."
   },
   {
     id: "prod-50",
     name: "Dettol Original Bath Soap Multipack",
     brand: "Dettol",
-    category: "personal",
+    category: "cleaning",
     categoryLabel: "Personal Care",
     weight: "5 x 125g Pack",
     price: 245,
     unit: "pack",
     availability: "In Stock",
     badge: "Germ Protection",
-    image: "https://images.unsplash.com/photo-1607006482602-76ca0fd2f9c3?auto=format&fit=crop&q=80&w=800",
+    image: "images/personal_care.png",
     description: "Trusted germ protection soap providing 99.9% protection with fresh pine fragrance."
+  },
+  {
+    id: "prod-50b",
+    name: "Lizol Citrus Disinfectant Floor Cleaner",
+    brand: "Lizol",
+    category: "cleaning",
+    categoryLabel: "Cleaning & Household",
+    weight: "1L Saver Pack",
+    price: 215,
+    unit: "bottle",
+    availability: "In Stock",
+    badge: "99.9% Germ Kill",
+    image: "images/cleaning_essentials.png",
+    description: "Triple action disinfectant surface cleaner leaving floors 10x cleaner with fresh citrus fragrance."
   },
   {
     id: "prod-51",
@@ -739,8 +767,22 @@ const productsData = [
     unit: "pack",
     availability: "In Stock",
     badge: "Brilliant Shine",
-    image: "https://images.unsplash.com/photo-1585832770485-e68a5fc88240?auto=format&fit=crop&q=80&w=800",
+    image: "images/cleaning_essentials.png",
     description: "Designed for washing machines to remove tough stains in 1 wash."
+  },
+  {
+    id: "prod-51b",
+    name: "Comfort After Wash Morning Fresh Fabric Conditioner",
+    brand: "Comfort",
+    category: "cleaning",
+    categoryLabel: "Cleaning & Household",
+    weight: "1L Pack",
+    price: 220,
+    unit: "bottle",
+    availability: "In Stock",
+    badge: "Long Lasting Freshness",
+    image: "images/cleaning_essentials.png",
+    description: "Provides softness, long-lasting fragrance, and fabric color protection after every wash."
   },
   {
     id: "prod-52",
@@ -753,35 +795,49 @@ const productsData = [
     unit: "bottle",
     availability: "In Stock",
     badge: "Grease Cutter",
-    image: "https://images.unsplash.com/photo-1585832770485-e68a5fc88240?auto=format&fit=crop&q=80&w=800",
+    image: "images/cleaning_essentials.png",
     description: "Concentrated lemon gel that cleans tough grease on utensils without scratching."
+  },
+  {
+    id: "prod-52b",
+    name: "Dettol Skincare Moisturizing Liquid Handwash Refill",
+    brand: "Dettol",
+    category: "cleaning",
+    categoryLabel: "Personal Care",
+    weight: "1.5L Pouch Pack",
+    price: 235,
+    unit: "pack",
+    availability: "In Stock",
+    badge: "Soft & Gentle",
+    image: "images/personal_care.png",
+    description: "pH-balanced moisturizing handwash refill pouch that protects against 100 illness-causing germs."
   },
   {
     id: "prod-53",
     name: "Dove Cream Beauty Bathing Bar",
     brand: "Dove",
-    category: "personal",
+    category: "cleaning",
     categoryLabel: "Personal Care",
     weight: "5 x 125g Pack",
     price: 290,
     unit: "pack",
     availability: "In Stock",
     badge: "Moisturizing",
-    image: "https://images.unsplash.com/photo-1607006482602-76ca0fd2f9c3?auto=format&fit=crop&q=80&w=800",
+    image: "images/personal_care.png",
     description: "Contains 1/4 moisturizing cream for soft, smooth, radiant skin."
   },
   {
     id: "prod-54",
     name: "Colgate Strong Teeth Toothpaste Twin Pack",
     brand: "Colgate",
-    category: "personal",
+    category: "cleaning",
     categoryLabel: "Personal Care",
     weight: "500g Combo (2 x 250g)",
     price: 215,
     unit: "pack",
     availability: "In Stock",
     badge: "Calcium Boost",
-    image: "https://images.unsplash.com/photo-1607006482602-76ca0fd2f9c3?auto=format&fit=crop&q=80&w=800",
+    image: "images/personal_care.png",
     description: "Amino Power formula that adds natural calcium to your teeth for 2x stronger teeth."
   },
 

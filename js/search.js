@@ -141,7 +141,7 @@ function renderCategoryShowcases() {
   categoryGrids.forEach(g => {
     const container = document.getElementById(g.id);
     if (container) {
-      const items = productsData.filter(p => p.category === g.cat);
+      const items = productsData.filter(p => p.category === g.cat || (g.cat === 'cleaning' && (p.category === 'cleaning' || p.category === 'personal')));
       if (items.length > 0) {
         container.innerHTML = renderCardMarkupList(items, true);
       }
@@ -266,7 +266,7 @@ function renderProducts() {
   if (!container) return;
 
   const filtered = productsData.filter(product => {
-    const matchesCategory = (activeCategory === 'all') || (product.category === activeCategory);
+    const matchesCategory = (activeCategory === 'all') || (product.category === activeCategory) || (activeCategory === 'cleaning' && (product.category === 'cleaning' || product.category === 'personal'));
     const matchesSearch = product.name.toLowerCase().includes(searchQuery) ||
                            product.brand.toLowerCase().includes(searchQuery) ||
                            product.categoryLabel.toLowerCase().includes(searchQuery) ||
