@@ -119,55 +119,72 @@ function setHeroSlide(idx) {
         </div>
       `;
     }
-  /* --------------------------------------------------------------------------
-   2. CATEGORY SHOWCASE TRACKS, AUTO-SCROLL & ARROW NAVIGATION
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. CATEGORY SHOWCASE TRACKS & AUTO LEFT-TO-RIGHT SCROLLING
    -------------------------------------------------------------------------- */
 function renderCategoryShowcases() {
-  const categoryMap = [
+  const categoryGrids = [
     { id: 'sugarTeaGrid', cat: 'sugar_tea' },
     { id: 'vegetablesGrid', cat: 'vegetables' },
     { id: 'wafersSnacksGrid', cat: 'wafers_snacks' },
-    { id: 'oilGheeGrid', cat: 'oil' },
-    { id: 'pulsesDalGrid', cat: 'pulses' },
-    { id: 'spicesMasalaGrid', cat: 'spices' },
+    { id: 'oilGrid', cat: 'oil' },
+    { id: 'pulsesGrid', cat: 'pulses' },
+    { id: 'spicesGrid', cat: 'spices' },
     { id: 'dryfruitsGrid', cat: 'dryfruits' },
     { id: 'cleaningGrid', cat: 'cleaning' },
-    { id: 'personalCareGrid', cat: 'personal' },
     { id: 'bestValueGrid', cat: 'best_value' }
   ];
 
-  categoryMap.forEach(item => {
-    const el = document.getElementById(item.id);
-    if (el) {
-      const items = productsData.filter(p => p.category === item.cat);
-      el.innerHTML = renderCardMarkupList(items.length > 0 ? items : productsData.slice(0, 6), true);
+  categoryGrids.forEach(g => {
+    const container = document.getElementById(g.id);
+    if (container) {
+      const items = productsData.filter(p => p.category === g.cat);
+      if (items.length > 0) {
+        container.innerHTML = renderCardMarkupList(items, true);
+      }
     }
   });
 
-  initAutoScrollShowcases();
+  initShowcaseAutoScroll();
 }
 
-// Continuous Left-to-Right Auto Scroll for Showcase Sliders
-let autoScrollTimer = null;
-function initAutoScrollShowcases() {
-  if (autoScrollTimer) clearInterval(autoScrollTimer);
+// Auto Left-To-Right Continuous Horizontal Scroll Loop for Showcase Sections
+let showcaseScrollIntervals = [];
 
-  autoScrollTimer = setInterval(() => {
-    const autoTracks = document.querySelectorAll('.auto-scroll-track');
-    autoTracks.forEach(track => {
-      // Pause if user is hovering
-      if (track.matches(':hover')) return;
+function initShowcaseAutoScroll() {
+  // Clear any existing intervals
+  showcaseScrollIntervals.forEach(inv => clearInterval(inv));
+  showcaseScrollIntervals = [];
 
-      if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 10) {
-        track.scrollTo({ left: 0, behavior: 'smooth' });
+  const scrollContainers = document.querySelectorAll('.showcase-grid-scroll');
+
+  scrollContainers.forEach(container => {
+    let isInteracting = false;
+
+    container.addEventListener('mouseenter', () => { isInteracting = true; });
+    container.addEventListener('mouseleave', () => { isInteracting = false; });
+    container.addEventListener('touchstart', () => { isInteracting = true; }, { passive: true });
+    container.addEventListener('touchend', () => { isInteracting = false; });
+
+    const timer = setInterval(() => {
+      if (isInteracting) return;
+
+      // Smooth scroll left-to-right
+      if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 10) {
+        container.scrollTo({ left: 0, behavior: 'smooth' });
       } else {
-        track.scrollBy({ left: 1.5, behavior: 'auto' });
+        container.scrollBy({ left: 1.5, behavior: 'auto' });
       }
-    });
-  }, 35);
+    }, 30);
+
+    showcaseScrollIntervals.push(timer);
+  });
 }
 
-// Global Left / Right Scroll Helper for Showcase Sections
+// Global Left / Right Manual Scroll Helper for Showcase Sections
 window.scrollShowcase = function(containerId, amount) {
   const container = document.getElementById(containerId);
   if (container) {
@@ -183,15 +200,23 @@ function scrollTrackRight(trackId) {
   scrollShowcase(trackId, 280);
 }
 
-// Generate Compact Product Card HTML
+// Generate Product Card HTML (Includes Admin Edit Button when verified)
 function renderCardMarkupList(itemList, isCompact = false) {
   return itemList.map(product => {
+    // Professional Clean WhatsApp Message (No decorative asterisks clutter)
     const cleanMsg = `GROCERY ENQUIRY - SHREE HANUMAN SUPER MARKET\n\nProduct: ${product.name}\nBrand: ${product.brand}\nPack: ${product.weight}\nPrice: Rs.${product.price} / ${product.unit}\n\nPlease confirm stock availability.`;
     const whatsappUrl = `https://wa.me/917083568189?text=${encodeURIComponent(cleanMsg)}`;
 
     return `
       <div class="product-card ${isCompact ? 'product-card-compact' : ''}" data-id="${product.id}">
         ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
+        
+        ${isOwnerVerified ? `
+          <button type="button" class="admin-edit-btn" onclick="triggerEditProduct('${product.id}')" title="Edit this product">
+            ✏️ Edit
+          </button>
+        ` : ''}
+
         <div class="product-img-box">
           <img src="${product.image}" alt="${product.name}" loading="lazy">
         </div>
@@ -223,15 +248,11 @@ function renderCardMarkupList(itemList, isCompact = false) {
             </button>
           </div>
 
-          <div class="product-actions-sub" style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="product-actions-sub">
             <a href="${whatsappUrl}" target="_blank" class="btn-sub-link">
               <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-0.999 3.648 3.742-0.981z"/></svg>
-              Enquire
+              WhatsApp Enquiry
             </a>
-            
-            <button type="button" class="btn-sub-link" style="color:var(--primary-color); font-weight:700; background:none; border:none; cursor:pointer;" onclick="openEditProductModal('${product.id}')">
-              ✏️ Edit
-            </button>
           </div>
         </div>
       </div>
@@ -293,33 +314,30 @@ function triggerAddToCart(id) {
 }
 
 /* --------------------------------------------------------------------------
-   3. OWNER SECRET PIN SECURITY & EDIT / ADD PRODUCT MODAL SYSTEM
+   3. SECRET OWNER PIN SECURITY & ADMIN EDIT/ADD PRODUCT SYSTEM
    -------------------------------------------------------------------------- */
 let isOwnerVerified = false;
 let pendingTargetCategory = 'all';
-let editingProductId = null;
 
-// Trigger PIN check or open Add Product modal directly if verified
+// Secret PIN strictly set to 123!@#
+const SECRET_OWNER_PIN = '123!@#';
+
 window.triggerPinCheck = function(category = 'all') {
   pendingTargetCategory = category;
 
   if (isOwnerVerified) {
     openAddProductModalDirectly();
   } else {
-    openPinModal();
-  }
-};
-
-window.openPinModal = function() {
-  const pinModal = document.getElementById('pinVerifyModal');
-  const errSpan = document.getElementById('pinErrorMsg');
-  const pinInput = document.getElementById('ownerPinInput');
-  if (errSpan) errSpan.style.display = 'none';
-  if (pinInput) pinInput.value = '';
-  if (pinModal) {
-    pinModal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    setTimeout(() => pinInput?.focus(), 100);
+    const pinModal = document.getElementById('pinVerifyModal');
+    const errSpan = document.getElementById('pinErrorMsg');
+    const pinInput = document.getElementById('ownerPinInput');
+    if (errSpan) errSpan.style.display = 'none';
+    if (pinInput) pinInput.value = '';
+    if (pinModal) {
+      pinModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => pinInput?.focus(), 100);
+    }
   }
 };
 
@@ -353,33 +371,26 @@ window.closeAddProductModal = function() {
   }
 };
 
-// Open Edit Product Modal
-window.openEditProductModal = function(productId) {
-  editingProductId = productId;
-
-  if (!isOwnerVerified) {
-    openPinModal();
-    return;
-  }
-
+// Edit Product Modal Trigger & Helper
+window.triggerEditProduct = function(productId) {
   const product = productsData.find(p => p.id === productId);
   if (!product) return;
 
-  const editModal = document.getElementById('editProductModal');
-  if (!editModal) return;
-
   document.getElementById('editProdId').value = product.id;
-  document.getElementById('editProdCategory').value = product.category || 'sugar_tea';
-  document.getElementById('editProdName').value = product.name || '';
-  document.getElementById('editProdBrand').value = product.brand || '';
-  document.getElementById('editProdWeight').value = product.weight || '';
-  document.getElementById('editProdPrice').value = product.price || 0;
-  document.getElementById('editProdUnit').value = product.unit || 'pack';
-  document.getElementById('editProdBadge').value = product.badge || 'Hot Deal';
-  document.getElementById('editProdImage').value = product.image || '';
+  document.getElementById('editProdName').value = product.name;
+  document.getElementById('editProdBrand').value = product.brand;
+  document.getElementById('editProdCategory').value = product.category;
+  document.getElementById('editProdWeight').value = product.weight;
+  document.getElementById('editProdPrice').value = product.price;
+  document.getElementById('editProdUnit').value = product.unit;
+  document.getElementById('editProdBadge').value = product.badge || 'New Launch';
+  document.getElementById('editProdImage').value = product.image;
 
-  editModal.classList.add('active');
-  document.body.style.overflow = 'hidden';
+  const editModal = document.getElementById('editProductModal');
+  if (editModal) {
+    editModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
 };
 
 window.closeEditProductModal = function() {
@@ -392,23 +403,23 @@ window.closeEditProductModal = function() {
 
 // Bind Modal Form Submissions
 document.addEventListener('DOMContentLoaded', () => {
-  // PIN Form Submission - SECRET PIN strictly "123!@#"
+  // PIN Form Submission
   const pinForm = document.getElementById('pinVerifyForm');
   pinForm?.addEventListener('submit', (e) => {
     e.preventDefault();
     const pinVal = document.getElementById('ownerPinInput')?.value.trim();
     const errSpan = document.getElementById('pinErrorMsg');
 
-    if (pinVal === '123!@#') {
+    // Strict Secret PIN verification: 123!@#
+    if (pinVal === SECRET_OWNER_PIN || pinVal === '123!@#') {
       isOwnerVerified = true;
       if (errSpan) errSpan.style.display = 'none';
       closePinModal();
-      
-      if (editingProductId) {
-        openEditProductModal(editingProductId);
-      } else {
-        openAddProductModalDirectly();
-      }
+      openAddProductModalDirectly();
+
+      // Re-render UI to show Admin Edit buttons on cards
+      renderCategoryShowcases();
+      renderProducts();
     } else {
       if (errSpan) {
         errSpan.style.display = 'block';
@@ -437,14 +448,12 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Default image fallbacks
     if (!image) {
       if (category === 'vegetables') image = 'images/fresh_vegetables.png';
       else if (category === 'wafers_snacks') image = 'images/potato_chips.png';
       else if (category === 'oil') image = 'images/sunflower_oil.png';
       else if (category === 'spices') image = 'images/spices_combo.png';
-      else if (category === 'sugar_tea') image = 'images/sugar_pack.png';
-      else if (category === 'pulses') image = 'images/toor_dal.png';
+      else if (category === 'sugar_tea') image = 'images/white_sugar.png';
       else image = 'images/logo.jpg';
     }
 
@@ -456,9 +465,9 @@ document.addEventListener('DOMContentLoaded', () => {
       pulses: 'Pulses & Dal',
       spices: 'Spices & Masala',
       dryfruits: 'Dry Fruits & Nuts',
-      cleaning: 'Cleaning & Household Care',
-      personal: 'Personal Care & Hygiene',
-      best_value: 'Best Value Hot Deals'
+      cleaning: 'Cleaning & Household',
+      personal: 'Personal Care',
+      best_value: 'Best Value Deals'
     };
 
     const newProdObj = {
@@ -491,6 +500,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (typeof showToastNotification === 'function') {
       showToastNotification(`Successfully published "${name}" to store catalog!`);
+    } else {
+      alert(`Product "${name}" added successfully!`);
     }
   });
 
@@ -499,7 +510,14 @@ document.addEventListener('DOMContentLoaded', () => {
   editProdForm?.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    const id = document.getElementById('editProdId').value;
+    const prodId = document.getElementById('editProdId').value;
+    const prodIndex = productsData.findIndex(p => p.id === prodId);
+
+    if (prodIndex === -1) {
+      alert('Product not found!');
+      return;
+    }
+
     const category = document.getElementById('editProdCategory').value;
     const name = document.getElementById('editProdName').value.trim();
     const brand = document.getElementById('editProdBrand').value.trim();
@@ -509,37 +527,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const badge = document.getElementById('editProdBadge').value;
     const image = document.getElementById('editProdImage').value.trim();
 
-    const prodIdx = productsData.findIndex(p => p.id === id);
-    if (prodIdx > -1) {
-      productsData[prodIdx].category = category;
-      productsData[prodIdx].name = name;
-      productsData[prodIdx].brand = brand;
-      productsData[prodIdx].weight = weight;
-      productsData[prodIdx].price = price;
-      productsData[prodIdx].unit = unit;
-      productsData[prodIdx].badge = badge;
-      productsData[prodIdx].image = image;
+    // Update in-memory product
+    productsData[prodIndex].category = category;
+    productsData[prodIndex].name = name;
+    productsData[prodIndex].brand = brand;
+    productsData[prodIndex].weight = weight;
+    productsData[prodIndex].price = price;
+    productsData[prodIndex].unit = unit;
+    productsData[prodIndex].badge = badge;
+    if (image) productsData[prodIndex].image = image;
 
-      // Save edits to localStorage
-      try {
-        const editsMap = JSON.parse(localStorage.getItem('shree_hanuman_edited_products_v1') || '{}');
-        editsMap[id] = productsData[prodIdx];
-        localStorage.setItem('shree_hanuman_edited_products_v1', JSON.stringify(editsMap));
-      } catch (e) {
-        console.warn("Could not save edit to localStorage", e);
-      }
-
-      renderHeroProducts();
-      renderCategoryShowcases();
-      renderProducts();
-
-      closeEditProductModal();
-
-      if (typeof showToastNotification === 'function') {
-        showToastNotification(`Successfully updated "${name}" details!`);
-      }
+    // Persist edited product in localStorage
+    try {
+      localStorage.setItem('shree_hanuman_custom_products_v1', JSON.stringify(productsData.filter(p => p.id.startsWith('prod-custom-'))));
+      localStorage.setItem('shree_hanuman_edited_overrides_v1', JSON.stringify(productsData));
+    } catch (err) {
+      console.warn("Could not save edited product to localStorage", err);
     }
-  });
-});
+
+    renderCategoryShowcases();
+    renderProducts();
+
+    closeEditProductModal();
+
+    if (typeof showToastNotification === 'function') {
+      showToastNotification(`Updated "${name}" successfully!`);
+    } else {
+      alert(`Product "${name}" updated!`);
+    }
   });
 });
