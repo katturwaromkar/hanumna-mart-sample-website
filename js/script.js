@@ -1,7 +1,7 @@
 /* ==========================================================================
-   V & B ENTERPRISES - Main Interactivity Script
+   SHREE HANUMAN SUPER MARKET - Main Interactivity Script
    Sticky navbar, stat counters, carousel, accordion, contact form feedback
-   Owner Contact: 8411821767
+   Owner Contact: 7083568189
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -200,17 +200,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const message = document.getElementById('formMessage').value.trim();
 
     if (!name || !phone) {
-      alert('Please provide your name and phone number so Basheer Sayed can reach out to you.');
+      alert('Please provide your name and phone number so Jitendra Bhanwarlal Unecha can reach out to you.');
       return;
     }
 
-    const encoded = encodeURIComponent(`Hello Basheer Sayed,\nMy Name: ${name}\nPhone: ${phone}\nEnquiry: ${message}`);
-    const directWhatsApp = `https://wa.me/918411821767?text=${encoded}`;
+    const encoded = encodeURIComponent(`Hello Jitendra Bhanwarlal Unecha,\nMy Name: ${name}\nPhone: ${phone}\nEnquiry: ${message}`);
+    const directWhatsApp = `https://wa.me/917083568189?text=${encoded}`;
 
-    if (confirm(`Thank you ${name}! Would you like to launch WhatsApp immediately to send this enquiry to Basheer Sayed?`)) {
+    if (confirm(`Thank you ${name}! Would you like to launch WhatsApp immediately to send this enquiry to Jitendra Bhanwarlal Unecha?`)) {
       window.open(directWhatsApp, '_blank');
     } else {
-      alert(`Thank you ${name}. Your message has been prepared for V & B Enterprises!`);
+      alert(`Thank you ${name}. Your message has been prepared for Shree Hanuman Super Market!`);
     }
 
     contactForm.reset();
@@ -313,10 +313,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Load saved theme or fallback to default emerald
-  let savedTheme = 'theme-emerald';
+  // Load saved theme or fallback to default purple (Monica screenshot theme)
+  let savedTheme = 'theme-purple';
   try {
-    savedTheme = localStorage.getItem('vb_theme') || 'theme-emerald';
+    savedTheme = localStorage.getItem('vb_theme') || 'theme-purple';
   } catch (e) {}
   applyColorTheme(savedTheme);
 
