@@ -190,29 +190,122 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 7. Contact Form Handling
+  // 7. Interactive Grocery Enquiry Form Handling
+  const enquirySelect = document.getElementById('enquiryProductSelect');
+  const enquiryQtyInput = document.getElementById('enquiryProductQty');
+  const addEnquiryBtn = document.getElementById('addEnquiryItemBtn');
+  const enquiryListContainer = document.getElementById('enquirySelectedItemsList');
   const contactForm = document.getElementById('wholesaleContactForm');
+
+  let selectedEnquiryItems = [];
+
+  // Populate Dropdown from productsData
+  if (enquirySelect && typeof productsData !== 'undefined') {
+    productsData.forEach(prod => {
+      const opt = document.createElement('option');
+      opt.value = `${prod.name} (${prod.weight})`;
+      opt.textContent = `${prod.name} - ₹${prod.price}/${prod.unit} (${prod.weight})`;
+      enquirySelect.appendChild(opt);
+    });
+
+    const customOpt = document.createElement('option');
+    customOpt.value = "Custom Item (Mentioned in Notes)";
+    customOpt.textContent = "➕ Other / Custom Item (Specify in Notes)";
+    enquirySelect.appendChild(customOpt);
+  }
+
+  // Render Selected Items Tags
+  const renderEnquiryItems = () => {
+    if (!enquiryListContainer) return;
+    if (selectedEnquiryItems.length === 0) {
+      enquiryListContainer.innerHTML = `<div class="enquiry-empty-note">No items added yet. Choose a product above and click "+ Add Item".</div>`;
+      return;
+    }
+
+    enquiryListContainer.innerHTML = selectedEnquiryItems.map((item, idx) => `
+      <div class="enquiry-item-tag">
+        <span>${item.name} &times; ${item.qty}</span>
+        <button type="button" class="remove-tag-btn" onclick="removeEnquiryItem(${idx})" title="Remove item">&times;</button>
+      </div>
+    `).join('');
+  };
+
+  // Add Item Click
+  addEnquiryBtn?.addEventListener('click', () => {
+    const selectedVal = enquirySelect?.value;
+    const qty = parseInt(enquiryQtyInput?.value, 10) || 1;
+
+    if (!selectedVal) {
+      alert('Please select a product from the dropdown first.');
+      return;
+    }
+
+    // Check if already added
+    const existingIdx = selectedEnquiryItems.findIndex(i => i.name === selectedVal);
+    if (existingIdx > -1) {
+      selectedEnquiryItems[existingIdx].qty += qty;
+    } else {
+      selectedEnquiryItems.push({ name: selectedVal, qty: qty });
+    }
+
+    enquirySelect.value = '';
+    enquiryQtyInput.value = '1';
+    renderEnquiryItems();
+  });
+
+  // Global helper to remove enquiry tag
+  window.removeEnquiryItem = function(index) {
+    selectedEnquiryItems.splice(index, 1);
+    renderEnquiryItems();
+  };
+
+  // Submit Enquiry
   contactForm?.addEventListener('submit', (e) => {
     e.preventDefault();
 
     const name = document.getElementById('formName').value.trim();
     const phone = document.getElementById('formPhone').value.trim();
-    const message = document.getElementById('formMessage').value.trim();
+    const notes = document.getElementById('formNotes')?.value.trim() || '';
 
     if (!name || !phone) {
       alert('Please provide your name and phone number so Jitendra Bhanwarlal Unecha can reach out to you.');
       return;
     }
 
-    const encoded = encodeURIComponent(`Hello Jitendra Bhanwarlal Unecha,\nMy Name: ${name}\nPhone: ${phone}\nEnquiry: ${message}`);
-    const directWhatsApp = `https://wa.me/917083568189?text=${encoded}`;
-
-    if (confirm(`Thank you ${name}! Would you like to launch WhatsApp immediately to send this enquiry to Jitendra Bhanwarlal Unecha?`)) {
-      window.open(directWhatsApp, '_blank');
-    } else {
-      alert(`Thank you ${name}. Your message has been prepared for Shree Hanuman Super Market!`);
+    if (selectedEnquiryItems.length === 0 && !notes) {
+      alert('Please select at least one product or add notes specifying required items.');
+      return;
     }
 
+    // Professional WhatsApp Message Format (No extract/extra decoration)
+    let msg = `Grocery Enquiry - Shree Hanuman Super Market\n\n`;
+    msg += `Customer Details:\n`;
+    msg += `Name: ${name}\n`;
+    msg += `Phone: ${phone}\n\n`;
+
+    if (selectedEnquiryItems.length > 0) {
+      msg += `Requested Items:\n`;
+      selectedEnquiryItems.forEach((item, index) => {
+        msg += `${index + 1}. ${item.name} - Quantity: ${item.qty}\n`;
+      });
+      msg += `\n`;
+    }
+
+    if (notes) {
+      msg += `Additional Notes:\n${notes}\n\n`;
+    }
+
+    msg += `Please share current rates and availability.`;
+
+    const encoded = encodeURIComponent(msg);
+    const directWhatsApp = `https://wa.me/917083568189?text=${encoded}`;
+
+    if (confirm(`Thank you ${name}! Would you like to launch WhatsApp to send your enquiry to owner Jitendra Bhanwarlal Unecha?`)) {
+      window.open(directWhatsApp, '_blank');
+    }
+
+    selectedEnquiryItems = [];
+    renderEnquiryItems();
     contactForm.reset();
   });
 

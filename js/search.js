@@ -1,18 +1,20 @@
 /* ==========================================================================
-   SHREE HANUMAN SUPER MARKET - Live Product Search & Category Filtering
-   Includes Hero Product Display & Specific Category Homepage Showcases
+   SHREE HANUMAN SUPER MARKET - Live Product Search & Category Showcase Engine
+   Includes 2-second Auto-rotating Hero Hot Deals Showcase and Arrow Navigation
    Owner: Jitendra Bhanwarlal Unecha | Contact: 7083568189
    ========================================================================== */
 
 let activeCategory = 'all';
 let searchQuery = '';
+let heroSlideIndex = 0;
+let heroSlideTimer = null;
 
 document.addEventListener('DOMContentLoaded', () => {
   const searchInput = document.getElementById('productSearchInput');
   const filterButtons = document.querySelectorAll('.filter-btn');
 
   // Initial Renders
-  renderHeroProducts();
+  initHeroHotDealsRotator();
   renderCategoryShowcases();
   renderProducts();
 
@@ -35,64 +37,142 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Render Hero Featured Products
-function renderHeroProducts() {
-  const heroGrid = document.getElementById('heroProductsGrid');
-  if (!heroGrid) return;
+/* --------------------------------------------------------------------------
+   1. HERO SECTION HOT DEALS AUTO-ROTATOR (2 SECONDS)
+   -------------------------------------------------------------------------- */
+function initHeroHotDealsRotator() {
+  const heroContainer = document.getElementById('heroProductsGrid');
+  if (!heroContainer) return;
 
-  const heroItems = productsData.filter(p => p.featuredHero || p.badge === 'Hot Deal' || p.badge === 'Sulphur Free').slice(0, 3);
+  const hotDeals = productsData.filter(p => p.featuredHero || p.badge === 'Hot Deal' || p.badge === 'Sulphur Free' || p.badge === 'Farm Fresh' || p.badge === 'Best Seller');
+  if (hotDeals.length === 0) return;
 
-  heroGrid.innerHTML = heroItems.map(product => `
-    <div class="hero-product-card">
-      <span class="hero-card-badge">${product.badge}</span>
-      <img src="${product.image}" alt="${product.name}" class="hero-card-img">
-      <div class="hero-card-info">
-        <h4 class="hero-card-title">${product.name}</h4>
-        <div class="hero-card-sub">${product.weight}</div>
-        <div class="hero-card-price-row">
-          <span class="hero-card-price">₹${product.price.toLocaleString('en-IN')} <small>/ ${product.unit}</small></span>
-          <button type="button" class="btn btn-cart-sm btn-ripple" onclick="addToCart('${product.id}', 1)">
-            <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
-            Add
-          </button>
+  const renderHeroSlide = (index) => {
+    const product = hotDeals[index % hotDeals.length];
+
+    heroContainer.innerHTML = `
+      <div class="hero-slideshow-card animate-fade-in">
+        <div class="hero-slideshow-badge">${product.badge || 'Hot Deal'} • Changes in 2s</div>
+        <div class="hero-slideshow-img-box">
+          <img src="${product.image}" alt="${product.name}" class="hero-slideshow-img">
+        </div>
+        <div class="hero-slideshow-info">
+          <span class="hero-card-brand">${product.brand}</span>
+          <h4 class="hero-slideshow-title">${product.name}</h4>
+          <div class="hero-slideshow-weight">${product.weight}</div>
+          <div class="hero-slideshow-price-row">
+            <div class="hero-slideshow-price">₹${product.price.toLocaleString('en-IN')} <span>/ ${product.unit}</span></div>
+            <button type="button" class="btn btn-cart-sm btn-ripple" onclick="addToCart('${product.id}', 1)">
+              <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+              Add to Cart
+            </button>
+          </div>
+        </div>
+
+        <!-- Slideshow Indicators -->
+        <div class="hero-slideshow-dots">
+          ${hotDeals.map((_, i) => `<span class="dot-sm ${i === (index % hotDeals.length) ? 'active' : ''}" onclick="setHeroSlide(${i})"></span>`).join('')}
         </div>
       </div>
-    </div>
-  `).join('');
+    `;
+  };
+
+  // Initial Slide
+  renderHeroSlide(heroSlideIndex);
+
+  // Auto transition every 2000ms (2 seconds)
+  if (heroSlideTimer) clearInterval(heroSlideTimer);
+  heroSlideTimer = setInterval(() => {
+    heroSlideIndex = (heroSlideIndex + 1) % hotDeals.length;
+    renderHeroSlide(heroSlideIndex);
+  }, 2000);
 }
 
-// Render Specific Category Showcase Grids on Homepage
+function setHeroSlide(idx) {
+  heroSlideIndex = idx;
+  const hotDeals = productsData.filter(p => p.featuredHero || p.badge === 'Hot Deal' || p.badge === 'Sulphur Free' || p.badge === 'Farm Fresh' || p.badge === 'Best Seller');
+  if (hotDeals.length > 0) {
+    const heroContainer = document.getElementById('heroProductsGrid');
+    if (heroContainer) {
+      const product = hotDeals[idx % hotDeals.length];
+      heroContainer.innerHTML = `
+        <div class="hero-slideshow-card animate-fade-in">
+          <div class="hero-slideshow-badge">${product.badge || 'Hot Deal'} • Changes in 2s</div>
+          <div class="hero-slideshow-img-box">
+            <img src="${product.image}" alt="${product.name}" class="hero-slideshow-img">
+          </div>
+          <div class="hero-slideshow-info">
+            <span class="hero-card-brand">${product.brand}</span>
+            <h4 class="hero-slideshow-title">${product.name}</h4>
+            <div class="hero-slideshow-weight">${product.weight}</div>
+            <div class="hero-slideshow-price-row">
+              <div class="hero-slideshow-price">₹${product.price.toLocaleString('en-IN')} <span>/ ${product.unit}</span></div>
+              <button type="button" class="btn btn-cart-sm btn-ripple" onclick="addToCart('${product.id}', 1)">
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+                Add to Cart
+              </button>
+            </div>
+          </div>
+          <div class="hero-slideshow-dots">
+            ${hotDeals.map((_, i) => `<span class="dot-sm ${i === idx ? 'active' : ''}" onclick="setHeroSlide(${i})"></span>`).join('')}
+          </div>
+        </div>
+      `;
+    }
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. CATEGORY SHOWCASE TRACKS & ARROW SCROLLING
+   -------------------------------------------------------------------------- */
 function renderCategoryShowcases() {
   // 1. Sugar, Tea, Wheat & Rice Showcase
-  const sugarTeaGrid = document.getElementById('sugarTeaGrid');
+  const sugarTeaGrid = document.getElementById('sugarTeaGrid') || document.getElementById('sugarTeaTrack');
   if (sugarTeaGrid) {
-    const items = productsData.filter(p => p.category === 'sugar_tea').slice(0, 4);
-    sugarTeaGrid.innerHTML = renderCardMarkupList(items);
+    const items = productsData.filter(p => p.category === 'sugar_tea');
+    sugarTeaGrid.innerHTML = renderCardMarkupList(items, true);
   }
 
-  // 2. Fresh Vegetables & Fruits Showcase
-  const vegGrid = document.getElementById('vegetablesGrid');
+  // 2. Fresh Vegetables Showcase
+  const vegGrid = document.getElementById('vegetablesGrid') || document.getElementById('vegetablesTrack');
   if (vegGrid) {
-    const items = productsData.filter(p => p.category === 'vegetables').slice(0, 4);
-    vegGrid.innerHTML = renderCardMarkupList(items);
+    const items = productsData.filter(p => p.category === 'vegetables');
+    vegGrid.innerHTML = renderCardMarkupList(items, true);
   }
 
   // 3. Wafers, Biscuits & Snacks Showcase
-  const snackGrid = document.getElementById('wafersSnacksGrid');
+  const snackGrid = document.getElementById('wafersSnacksGrid') || document.getElementById('wafersSnacksTrack');
   if (snackGrid) {
-    const items = productsData.filter(p => p.category === 'wafers_snacks').slice(0, 4);
-    snackGrid.innerHTML = renderCardMarkupList(items);
+    const items = productsData.filter(p => p.category === 'wafers_snacks');
+    snackGrid.innerHTML = renderCardMarkupList(items, true);
   }
 }
 
-// Helper to generate product card HTML snippet
-function renderCardMarkupList(itemList) {
+// Global Left / Right Scroll Helper for Showcase Sections
+window.scrollShowcase = function(containerId, amount) {
+  const container = document.getElementById(containerId);
+  if (container) {
+    container.scrollBy({ left: amount, behavior: 'smooth' });
+  }
+};
+
+function scrollTrackLeft(trackId) {
+  scrollShowcase(trackId, -280);
+}
+
+function scrollTrackRight(trackId) {
+  scrollShowcase(trackId, 280);
+}
+
+// Generate Compact Product Card HTML
+function renderCardMarkupList(itemList, isCompact = false) {
   return itemList.map(product => {
-    const encodedMessage = encodeURIComponent(`Hello Jitendra Bhanwarlal Unecha,\nI would like to enquire about:\nProduct: ${product.name}\nWeight: ${product.weight}\nPrice: ₹${product.price} / ${product.unit}`);
-    const whatsappUrl = `https://wa.me/917083568189?text=${encodedMessage}`;
+    // Professional Clean WhatsApp Message (No decorative asterisks clutter)
+    const cleanMsg = `GROCERY ENQUIRY - SHREE HANUMAN SUPER MARKET\n\nProduct: ${product.name}\nBrand: ${product.brand}\nPack: ${product.weight}\nPrice: Rs.${product.price} / ${product.unit}\n\nPlease confirm stock availability.`;
+    const whatsappUrl = `https://wa.me/917083568189?text=${encodeURIComponent(cleanMsg)}`;
 
     return `
-      <div class="product-card">
+      <div class="product-card ${isCompact ? 'product-card-compact' : ''}">
         ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
         <div class="product-img-box">
           <img src="${product.image}" alt="${product.name}" loading="lazy">
@@ -105,7 +185,7 @@ function renderCardMarkupList(itemList) {
           <div class="product-price-row">
             <div class="price-box">
               <span class="price-label">Price</span>
-              <div class="product-price">₹${product.price.toLocaleString('en-IN')} <span style="font-size:0.85rem; font-weight:normal; color:var(--text-secondary);">/ ${product.unit}</span></div>
+              <div class="product-price">₹${product.price.toLocaleString('en-IN')} <span style="font-size:0.8rem; font-weight:normal; color:var(--text-secondary);">/ ${product.unit}</span></div>
             </div>
             <span class="stock-status-tag">${product.availability}</span>
           </div>
@@ -118,16 +198,16 @@ function renderCardMarkupList(itemList) {
             </div>
 
             <button type="button" class="btn btn-cart btn-ripple" onclick="triggerAddToCart('${product.id}')">
-              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/>
               </svg>
-              Add to Cart
+              Add
             </button>
           </div>
 
           <div class="product-actions-sub">
             <a href="${whatsappUrl}" target="_blank" class="btn-sub-link">
-              <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-0.999 3.648 3.742-0.981z"/></svg>
+              <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-0.999 3.648 3.742-0.981z"/></svg>
               WhatsApp Enquiry
             </a>
           </div>
@@ -164,7 +244,7 @@ function renderProducts() {
     return;
   }
 
-  container.innerHTML = renderCardMarkupList(filtered);
+  container.innerHTML = renderCardMarkupList(filtered, true);
 }
 
 // Helpers for product card quantity adjustment

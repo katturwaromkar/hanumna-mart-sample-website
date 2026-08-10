@@ -14,17 +14,6 @@ function createChatbotWidget() {
   chatbotContainer.className = 'chatbot-container';
 
   chatbotContainer.innerHTML = `
-    <!-- Floating Toggle Button -->
-    <button id="chatbotToggle" class="chatbot-toggle-btn" aria-label="Open Super Market Chatbot">
-      <div class="chatbot-badge">1</div>
-      <svg class="bot-icon-open" width="28" height="28" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-      </svg>
-      <svg class="bot-icon-close" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display:none;">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-      </svg>
-    </button>
-
     <!-- Chatbot Window -->
     <div id="chatbotWindow" class="chatbot-window">
       <div class="chatbot-header">
@@ -70,22 +59,16 @@ function createChatbotWidget() {
   document.body.appendChild(chatbotContainer);
 
   // Toggle Window Handlers
-  const toggleBtn = document.getElementById('chatbotToggle');
   const chatWindow = document.getElementById('chatbotWindow');
   const closeBtn = document.getElementById('chatbotClose');
-  const openIcon = toggleBtn.querySelector('.bot-icon-open');
-  const closeIcon = toggleBtn.querySelector('.bot-icon-close');
-  const badge = toggleBtn.querySelector('.chatbot-badge');
 
   const toggleChat = () => {
-    const isOpen = chatWindow.classList.toggle('active');
-    openIcon.style.display = isOpen ? 'none' : 'block';
-    closeIcon.style.display = isOpen ? 'block' : 'none';
-    if (badge) badge.style.display = 'none';
+    if (chatWindow) {
+      chatWindow.classList.toggle('active');
+    }
   };
 
-  toggleBtn.addEventListener('click', toggleChat);
-  closeBtn.addEventListener('click', toggleChat);
+  closeBtn?.addEventListener('click', toggleChat);
 
   // Bind external floating column button trigger
   const extTrigger = document.getElementById('floatingBotTriggerBtn');

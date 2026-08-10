@@ -330,14 +330,14 @@ button {
 
 /* Section Layout */
 .section {
-  padding: 6rem 0;
+  padding: 3.25rem 0;
   position: relative;
 }
 
 .section-header {
   text-align: center;
   max-width: 720px;
-  margin: 0 auto 3.5rem auto;
+  margin: 0 auto 2rem auto;
 }
 
 .badge {
@@ -1077,11 +1077,79 @@ button {
   box-shadow: 0 4px 15px var(--primary-glow);
 }
 
-/* Product Cards Grid */
+/* Showcase Header Row & Slider Navigation Arrows */
+.showcase-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.showcase-arrows {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.showcase-arrow-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  box-shadow: var(--shadow-soft);
+  transition: var(--transition-fast);
+  cursor: pointer;
+}
+
+.showcase-arrow-btn:hover {
+  background: var(--primary-color);
+  color: #FFFFFF;
+  border-color: var(--primary-color);
+  transform: scale(1.08);
+  box-shadow: 0 4px 15px var(--primary-glow);
+}
+
+.showcase-slider-container {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.showcase-grid-scroll {
+  display: flex !important;
+  grid-template-columns: none !important;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  gap: 1.25rem !important;
+  padding: 0.5rem 0.25rem 1rem 0.25rem;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Edge */
+}
+
+.showcase-grid-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.showcase-grid-scroll .product-card {
+  flex: 0 0 260px;
+  min-width: 260px;
+}
+
+/* Compact Product Cards Grid (4 columns desktop) */
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
 }
 
 .product-card {
@@ -1098,27 +1166,27 @@ button {
 
 .product-card:hover {
   border-color: var(--primary-color);
-  transform: translateY(-6px);
+  transform: translateY(-4px);
   box-shadow: var(--shadow-card-hover);
 }
 
 .product-badge {
   position: absolute;
-  top: 1rem;
-  left: 1rem;
+  top: 0.75rem;
+  left: 0.75rem;
   background: var(--primary-color);
   color: #FFFFFF;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-family: var(--font-heading);
   font-weight: 600;
-  padding: 0.3rem 0.75rem;
+  padding: 0.25rem 0.65rem;
   border-radius: var(--radius-pill);
   z-index: 2;
   box-shadow: 0 4px 10px var(--primary-glow);
 }
 
 .product-img-box {
-  height: 210px;
+  height: 160px;
   width: 100%;
   background: #F8F9FA;
   position: relative;
@@ -1137,7 +1205,7 @@ button {
 }
 
 .product-details {
-  padding: 1.5rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -1420,7 +1488,56 @@ button {
 
 .form-textarea {
   resize: vertical;
-  min-height: 130px;
+  min-height: 100px;
+}
+
+.enquiry-items-container {
+  background: #F8F9FA;
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+  min-height: 50px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.enquiry-empty-note {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.enquiry-item-tag {
+  background: var(--bg-soft-section);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-pill);
+  padding: 0.35rem 0.75rem;
+  font-size: 0.82rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+}
+
+.enquiry-item-tag .remove-tag-btn {
+  background: none;
+  border: none;
+  color: #EF4444;
+  font-size: 1.1rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.enquiry-item-tag .remove-tag-btn:hover {
+  color: #B91C1C;
 }
 
 /* Map Frame */

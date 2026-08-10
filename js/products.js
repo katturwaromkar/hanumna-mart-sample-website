@@ -18,7 +18,7 @@ const productsData = [
     availability: "In Stock",
     badge: "Hot Deal",
     featuredHero: true,
-    image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=800",
+    image: "images/wheat_atta.png",
     description: "100% pure wheat grain chakki fresh flour delivering soft, fluffy rotis and high dietary fiber."
   },
   {
@@ -63,7 +63,7 @@ const productsData = [
     availability: "In Stock",
     badge: "Premium Grade",
     featuredHero: true,
-    image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=800",
+    image: "images/basmati_rice.png",
     description: "Aged long-grain aromatic Basmati rice with exquisite fragrance and fluffy post-cooking texture."
   },
   {
@@ -77,7 +77,7 @@ const productsData = [
     unit: "bag",
     availability: "In Stock",
     badge: "Daily Essential",
-    image: "https://images.unsplash.com/photo-1536304929831-ee1ca9d44906?auto=format&fit=crop&q=80&w=800",
+    image: "images/basmati_rice.png",
     description: "Lightweight, aromatic medium-grain rice perfect for daily household consumption and catering."
   },
 
@@ -93,7 +93,8 @@ const productsData = [
     unit: "bag",
     availability: "In Stock",
     badge: "Farm Fresh",
-    image: "https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?auto=format&fit=crop&q=80&w=800",
+    featuredHero: true,
+    image: "images/fresh_vegetables.png",
     description: "Crisp, premium quality red onions sourced directly from Junnar and Nashik farms."
   },
   {
@@ -165,7 +166,8 @@ const productsData = [
     unit: "pack",
     availability: "In Stock",
     badge: "Crispy Crunch",
-    image: "https://images.unsplash.com/photo-1566478989037-eec170784d0b?auto=format&fit=crop&q=80&w=800",
+    featuredHero: true,
+    image: "images/potato_chips.png",
     description: "Thin, crispy golden potato wafers seasoned with pure rock salt."
   },
   {
@@ -193,7 +195,7 @@ const productsData = [
     unit: "pack",
     availability: "In Stock",
     badge: "Kids Special",
-    image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&q=80&w=800",
+    image: "https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?auto=format&fit=crop&q=80&w=800",
     description: "Light, crunchy multi-layered wafer rolls filled with smooth chocolate and vanilla cream."
   },
   {
@@ -221,7 +223,7 @@ const productsData = [
     unit: "bundle",
     availability: "In Stock",
     badge: "Best Seller",
-    image: "https://images.unsplash.com/photo-1612927601601-6638404737ce?auto=format&fit=crop&q=80&w=800",
+    image: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&q=80&w=800",
     description: "Iconic delicious masala instant noodles fortified with iron for a quick snack."
   },
 
@@ -251,7 +253,8 @@ const productsData = [
     unit: "pack",
     availability: "In Stock",
     badge: "Popular",
-    image: "https://images.unsplash.com/photo-1620706857370-e1b9770e8bb1?auto=format&fit=crop&q=80&w=800",
+    featuredHero: true,
+    image: "images/sunflower_oil.png",
     description: "Light and healthy refined sunflower oil rich in Vitamin E, ideal for frying and daily cooking."
   },
   {
@@ -295,7 +298,7 @@ const productsData = [
     unit: "pack",
     availability: "In Stock",
     badge: "High Protein",
-    image: "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&q=80&w=800",
+    image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=800",
     description: "Easy to digest yellow moong dal, rich in protein and ideal for daily khichdi and soups."
   },
 
@@ -311,7 +314,8 @@ const productsData = [
     unit: "pack",
     availability: "In Stock",
     badge: "Best Value",
-    image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=800",
+    featuredHero: true,
+    image: "images/spices_combo.png",
     description: "High-curcumin turmeric powder and fiery red chili powder with natural oils preserved."
   },
   {
@@ -359,3 +363,4 @@ const productsData = [
     description: "Trusted germ protection soap providing 99.9% protection with fresh pine fragrance."
   }
 ];
+

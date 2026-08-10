@@ -265,29 +265,26 @@ function handleCheckoutOrderSubmit(e) {
 
   // Construct itemized list
   let itemsListText = cartState.map((item, index) => {
-    return `${index + 1}. *${item.name}* (${item.weight})\n   Quantity: ${item.qty} ${item.unit} | Rate: ₹${item.price} | Subtotal: ₹${item.price * item.qty}`;
+    return `${index + 1}. ${item.name} (${item.weight}) - Qty: ${item.qty} ${item.unit} | Rate: ₹${item.price} | Subtotal: ₹${item.price * item.qty}`;
   }).join('\n');
 
   const grandTotal = getCartTotal();
 
-  // WhatsApp formatted string
-  let message = `🛒 *NEW GROCERY ORDER - SHREE HANUMAN SUPER MARKET*\n`;
-  message += `===============================\n`;
-  message += `👤 *Customer Name:* ${name}\n`;
-  message += `📞 *Phone Number:* ${phone}\n`;
-  message += `📍 *Delivery Address:* ${address}\n`;
-  message += `⏰ *Delivery Slot:* ${timing}\n`;
-  message += `💳 *Payment Option:* ${payment}\n`;
+  // WhatsApp formatted string - Professional, clean format with no extra decoration
+  let message = `New Grocery Order - Shree Hanuman Super Market\n\n`;
+  message += `Customer Details:\n`;
+  message += `Name: ${name}\n`;
+  message += `Phone: ${phone}\n`;
+  message += `Delivery Address: ${address}\n`;
+  message += `Delivery Slot: ${timing}\n`;
+  message += `Payment Option: ${payment}\n`;
   if (notes) {
-    message += `📝 *Order Notes:* ${notes}\n`;
+    message += `Order Notes: ${notes}\n`;
   }
-  message += `===============================\n`;
-  message += `📦 *ORDERED ITEMS:* (${cartState.length} item types)\n\n`;
+  message += `\nOrdered Items:\n`;
   message += itemsListText;
-  message += `\n\n===============================\n`;
-  message += `💰 *TOTAL ORDER AMOUNT:* ₹${grandTotal.toLocaleString('en-IN')}\n`;
-  message += `===============================\n`;
-  message += `Please confirm my order availability & delivery time slot!`;
+  message += `\n\nTotal Payable Amount: ₹${grandTotal.toLocaleString('en-IN')}\n\n`;
+  message += `Please confirm order availability and delivery time slot.`;
 
   const encodedUrl = `https://wa.me/917083568189?text=${encodeURIComponent(message)}`;
 
