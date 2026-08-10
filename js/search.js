@@ -419,43 +419,93 @@ window.closeEditProductModal = function() {
   }
 };
 
+// Global Top Header Category Selector Trigger
+window.filterCategoryFromHeader = function(category) {
+  activeCategory = category;
+
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  filterButtons.forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-category') === category);
+  });
+
+  renderProducts();
+
+  const targetElem = (category !== 'all' && category !== 'best_value') 
+    ? (document.getElementById(category.replace('_', '-') + '-section') || document.getElementById('products')) 
+    : document.getElementById('products');
+
+  if (targetElem) {
+    targetElem.scrollIntoView({ behavior: 'smooth' });
+  }
+};
+
+// HTML5 Canvas High-Res Image Compression (Prevents high-res upload slowdown)
+function compressImageFile(file, callback) {
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      let width = img.width;
+      let height = img.height;
+      const maxDim = 600;
+
+      if (width > maxDim || height > maxDim) {
+        if (width > height) {
+          height = Math.round((height * maxDim) / width);
+          width = maxDim;
+        } else {
+          width = Math.round((width * maxDim) / height);
+          height = maxDim;
+        }
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+
+      const compressedBase64 = canvas.toDataURL('image/jpeg', 0.82);
+      callback(compressedBase64);
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
 // Bind Modal Form Submissions & File Upload Listeners
 document.addEventListener('DOMContentLoaded', () => {
-  // File upload listener for New Product
+  // High-Res Auto-Compressed File upload listener for New Product
   const newFileInput = document.getElementById('newProdImageFile');
   newFileInput?.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        newUploadedImageBase64 = evt.target.result;
+      compressImageFile(file, function(compressedDataUrl) {
+        newUploadedImageBase64 = compressedDataUrl;
         const preview = document.getElementById('newProdImagePreview');
         const previewBox = document.getElementById('newProdImagePreviewBox');
-        if (preview) preview.src = evt.target.result;
+        if (preview) preview.src = compressedDataUrl;
         if (previewBox) previewBox.style.display = 'flex';
-      };
-      reader.readAsDataURL(file);
+      });
     }
   });
 
-  // File upload listener for Edit Product
+  // High-Res Auto-Compressed File upload listener for Edit Product
   const editFileInput = document.getElementById('editProdImageFile');
   editFileInput?.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        editUploadedImageBase64 = evt.target.result;
+      compressImageFile(file, function(compressedDataUrl) {
+        editUploadedImageBase64 = compressedDataUrl;
         const preview = document.getElementById('editProdImagePreview');
         const statusSpan = document.getElementById('editProdImagePreviewStatus');
-        if (preview) preview.src = evt.target.result;
+        if (preview) preview.src = compressedDataUrl;
         if (statusSpan) {
-          statusSpan.textContent = '✓ New image file attached';
+          statusSpan.textContent = '✓ High-res image compressed & attached';
           statusSpan.style.color = 'var(--success)';
           statusSpan.style.fontWeight = '600';
         }
-      };
-      reader.readAsDataURL(file);
+      });
     }
   });
 
