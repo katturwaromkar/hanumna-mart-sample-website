@@ -284,13 +284,13 @@
   }
 }
 
-/* 3cm gap above Get In Touch section on responsive views */
+/* Clean & tight gap above Get In Touch section on responsive views */
 @media screen and (max-width: 768px) {
   #products {
     padding-bottom: 0.5rem !important;
   }
   #contact {
-    padding-top: 3cm !important;
+    padding-top: 1rem !important;
     margin-top: 0 !important;
   }
   #contact .section-header {
@@ -298,6 +298,7 @@
     margin-bottom: 1.25rem !important;
   }
 }
+
 
 
 

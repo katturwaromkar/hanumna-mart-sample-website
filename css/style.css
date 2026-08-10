@@ -3586,9 +3586,9 @@ button {
   padding-bottom: 0 !important;
 }
 
-/* Exact 3cm gap above Get In Touch Contact section with zero blank area */
+/* Clean & Tight Gap Above Contact Section - Zero Blank Screen */
 #contact {
-  padding-top: 3cm !important;
+  padding-top: 1rem !important;
   margin-top: 0 !important;
 }
 
@@ -3597,6 +3597,24 @@ button {
   margin-bottom: 1.25rem !important;
   padding-top: 0 !important;
 }
+
+/* Scroll margin top offset for fixed header navigation */
+section,
+#sugar-tea-section,
+#vegetables-section,
+#wafers-snacks-section,
+#oil-section,
+#pulses-section,
+#spices-section,
+#dryfruits-section,
+#cleaning-section,
+#best-value-section,
+#products,
+#contact {
+  scroll-margin-top: 80px;
+}
+
+
 
 
 

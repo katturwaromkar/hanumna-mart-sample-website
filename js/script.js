@@ -52,23 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 3. Scroll Reveal Animation using IntersectionObserver
+  // 3. Instant Reveal for all sections (No blank screen delays)
   const revealElements = document.querySelectorAll('.reveal');
-  const observerOptions = {
-    threshold: 0.15,
-    rootMargin: '0px 0px -50px 0px'
-  };
-
-  const revealObserver = new IntersectionObserver((entries, observer) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('revealed');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, observerOptions);
-
-  revealElements.forEach(el => revealObserver.observe(el));
+  revealElements.forEach(el => el.classList.add('revealed'));
 
   // 4. Animated Number Counters
   const counterElements = document.querySelectorAll('.counter');
