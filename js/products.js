@@ -364,3 +364,30 @@ const productsData = [
   }
 ];
 
+// Load Custom Products from localStorage
+const CUSTOM_PRODUCTS_KEY = 'shree_hanuman_custom_products_v1';
+try {
+  const savedCustomProds = localStorage.getItem(CUSTOM_PRODUCTS_KEY);
+  if (savedCustomProds) {
+    const parsed = JSON.parse(savedCustomProds);
+    if (Array.isArray(parsed)) {
+      productsData.push(...parsed);
+    }
+  }
+} catch (e) {
+  console.warn("Could not load custom products from localStorage", e);
+}
+
+// Function to add new product dynamically
+function addNewProductToDataset(prodObj) {
+  productsData.unshift(prodObj);
+
+  try {
+    const existingCustom = JSON.parse(localStorage.getItem(CUSTOM_PRODUCTS_KEY) || '[]');
+    existingCustom.unshift(prodObj);
+    localStorage.setItem(CUSTOM_PRODUCTS_KEY, JSON.stringify(existingCustom));
+  } catch (e) {
+    console.error("Failed to save custom product to localStorage", e);
+  }
+}
+

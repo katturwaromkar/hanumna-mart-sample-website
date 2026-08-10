@@ -269,3 +269,162 @@ function triggerAddToCart(id) {
   const qty = input ? (parseInt(input.value, 10) || 1) : 1;
   addToCart(id, qty);
 }
+
+/* --------------------------------------------------------------------------
+   3. OWNER PIN SECURITY & ADD NEW PRODUCT MODAL SYSTEM
+   -------------------------------------------------------------------------- */
+let isOwnerVerified = false;
+let pendingTargetCategory = 'all';
+
+// Trigger PIN check or open Add Product modal directly if verified
+window.triggerPinCheck = function(category = 'all') {
+  pendingTargetCategory = category;
+
+  if (isOwnerVerified) {
+    openAddProductModalDirectly();
+  } else {
+    const pinModal = document.getElementById('pinVerifyModal');
+    const errSpan = document.getElementById('pinErrorMsg');
+    const pinInput = document.getElementById('ownerPinInput');
+    if (errSpan) errSpan.style.display = 'none';
+    if (pinInput) pinInput.value = '';
+    if (pinModal) {
+      pinModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => pinInput?.focus(), 100);
+    }
+  }
+};
+
+window.closePinModal = function() {
+  const pinModal = document.getElementById('pinVerifyModal');
+  if (pinModal) {
+    pinModal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+};
+
+window.openAddProductModalDirectly = function() {
+  const addModal = document.getElementById('addProductModal');
+  const catSelect = document.getElementById('newProdCategory');
+
+  if (catSelect && pendingTargetCategory !== 'all') {
+    catSelect.value = pendingTargetCategory;
+  }
+
+  if (addModal) {
+    addModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+};
+
+window.closeAddProductModal = function() {
+  const addModal = document.getElementById('addProductModal');
+  if (addModal) {
+    addModal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+};
+
+// Bind Modal Form Submissions
+document.addEventListener('DOMContentLoaded', () => {
+  // PIN Form Submission
+  const pinForm = document.getElementById('pinVerifyForm');
+  pinForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const pinVal = document.getElementById('ownerPinInput')?.value.trim();
+    const errSpan = document.getElementById('pinErrorMsg');
+
+    // Valid PINs: 7083, 1234, 7083568189
+    if (pinVal === '7083' || pinVal === '1234' || pinVal === '7083568189') {
+      isOwnerVerified = true;
+      if (errSpan) errSpan.style.display = 'none';
+      closePinModal();
+      openAddProductModalDirectly();
+    } else {
+      if (errSpan) {
+        errSpan.style.display = 'block';
+      } else {
+        alert('Incorrect PIN! Access denied.');
+      }
+    }
+  });
+
+  // Add New Product Form Submission
+  const addProdForm = document.getElementById('addNewProductForm');
+  addProdForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const category = document.getElementById('newProdCategory').value;
+    const name = document.getElementById('newProdName').value.trim();
+    const brand = document.getElementById('newProdBrand').value.trim();
+    const weight = document.getElementById('newProdWeight').value.trim();
+    const price = parseFloat(document.getElementById('newProdPrice').value) || 0;
+    const unit = document.getElementById('newProdUnit').value;
+    const badge = document.getElementById('newProdBadge').value || 'New Launch';
+    let image = document.getElementById('newProdImage')?.value.trim();
+
+    if (!name || !brand || !weight || price <= 0) {
+      alert('Please fill out all required product fields correctly.');
+      return;
+    }
+
+    // Default image fallback if left empty
+    if (!image) {
+      if (category === 'vegetables') image = 'images/fresh_vegetables.png';
+      else if (category === 'wafers_snacks') image = 'images/potato_chips.png';
+      else if (category === 'oil') image = 'images/sunflower_oil.png';
+      else if (category === 'spices') image = 'images/spices_combo.png';
+      else if (category === 'sugar_tea') image = 'images/wheat_atta.png';
+      else image = 'images/logo.jpg';
+    }
+
+    const categoryLabels = {
+      sugar_tea: 'Sugar, Tea, Wheat & Rice',
+      vegetables: 'Fresh Vegetables & Fruits',
+      wafers_snacks: 'Wafers, Biscuits & Snacks',
+      oil: 'Cooking Oil & Ghee',
+      pulses: 'Pulses & Dal',
+      spices: 'Spices & Masala',
+      dryfruits: 'Dry Fruits & Nuts',
+      cleaning: 'Cleaning & Household',
+      personal: 'Personal Care'
+    };
+
+    const newProdObj = {
+      id: 'prod-custom-' + Date.now(),
+      name: name,
+      brand: brand,
+      category: category,
+      categoryLabel: categoryLabels[category] || 'Daily Essentials',
+      weight: weight,
+      price: price,
+      unit: unit,
+      availability: 'In Stock',
+      badge: badge,
+      featuredHero: badge === 'Hot Deal',
+      image: image,
+      description: `${name} by ${brand} (${weight}). Available at Shree Hanuman Super Market Warje Pune.`
+    };
+
+    // Save product to dataset & localStorage
+    if (typeof addNewProductToDataset === 'function') {
+      addNewProductToDataset(newProdObj);
+    } else {
+      productsData.unshift(newProdObj);
+    }
+
+    // Re-render UI views
+    renderCategoryShowcases();
+    renderProducts();
+
+    closeAddProductModal();
+    addProdForm.reset();
+
+    if (typeof showToastNotification === 'function') {
+      showToastNotification(`Successfully published "${name}" to store catalog!`);
+    } else {
+      alert(`Product "${name}" added successfully!`);
+    }
+  });
+});
