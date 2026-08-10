@@ -330,14 +330,14 @@ button {
 
 /* Section Layout */
 .section {
-  padding: 3.25rem 0;
+  padding: 1.5rem 0;
   position: relative;
 }
 
 .section-header {
   text-align: center;
   max-width: 720px;
-  margin: 0 auto 2rem auto;
+  margin: 0 auto 1.25rem auto;
 }
 
 .badge {
@@ -3558,14 +3558,18 @@ button {
   border: 2px solid #FFFFFF;
 }
 
-/* Streamlined Section Padding to Remove Blank Space */
+/* Streamlined Global Section Padding to Remove Blank Space Across All Sections */
 .section {
-  padding: 2.25rem 0;
+  padding: 1.25rem 0 !important;
+}
+
+.category-showcase-section {
+  padding: 1rem 0 !important;
 }
 
 /* Tight connection between Best Value Deals, Catalog & Contact Section */
 #best-value-section {
-  padding-top: 1.5rem !important;
+  padding-top: 1rem !important;
   padding-bottom: 0.5rem !important;
   margin-bottom: 0 !important;
 }
@@ -3590,9 +3594,10 @@ button {
 
 #contact .section-header {
   margin-top: 0 !important;
-  margin-bottom: 1.5rem !important;
+  margin-bottom: 1.25rem !important;
   padding-top: 0 !important;
 }
+
 
 
 /* Minimalist Footer Admin '+' Button */
