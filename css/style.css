@@ -3565,12 +3565,15 @@ button {
 
 /* Tight connection between Best Value Deals, Catalog & Contact Section */
 #best-value-section {
+  padding-top: 1.5rem !important;
   padding-bottom: 0.5rem !important;
+  margin-bottom: 0 !important;
 }
 
 #products {
-  padding-top: 0.75rem !important;
-  padding-bottom: 0 !important;
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+  margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
 
@@ -3579,17 +3582,18 @@ button {
   padding-bottom: 0 !important;
 }
 
-/* Zero out blank space above Get In Touch Contact section across all screen sizes */
+/* Exact 3cm gap above Get In Touch Contact section with zero blank area */
 #contact {
-  padding-top: 0.5rem !important;
+  padding-top: 3cm !important;
   margin-top: 0 !important;
 }
 
 #contact .section-header {
   margin-top: 0 !important;
-  margin-bottom: 1.25rem !important;
+  margin-bottom: 1.5rem !important;
   padding-top: 0 !important;
 }
+
 
 /* Minimalist Footer Admin '+' Button */
 .footer-bottom {
