@@ -532,11 +532,15 @@
 
       <div class="showcase-slider-container">
         <div class="products-grid showcase-grid-scroll" id="bestValueGrid">
-          <!-- Rendered via js/search.js -->
         </div>
       </div>
     </div>
   </section>
+
+  <!-- ==========================================
+       DYNAMIC ADMIN CREATED CUSTOM SHOWCASE SECTIONS
+       ========================================== -->
+  <div id="customCategoryShowcases"></div>
 
   <!-- ==========================================
        6. MAIN PRICE CATALOG & ALL CATEGORIES
@@ -901,6 +905,82 @@
   </div>
 
   <!-- ==========================================
+       ADMIN CONTROL BAR (SHOWN AFTER ENTERING PIN)
+       ========================================== -->
+  <div id="adminActionBar" class="admin-action-bar" style="display:none;">
+    <div class="admin-bar-content">
+      <span class="admin-status-badge">👑 Admin Mode Verified</span>
+      <div class="admin-btn-group">
+        <button type="button" class="btn btn-admin-action" onclick="openAddSectionModal()">
+          📁 + Add New Section
+        </button>
+        <button type="button" class="btn btn-admin-action btn-admin-highlight" onclick="openAddProductModalDirectly()">
+          🛍️ + Add Product
+        </button>
+        <button type="button" class="btn btn-admin-logout" onclick="lockAdminSession()" title="Lock Admin Mode">
+          🔒 Exit
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       ADD NEW SECTION / CATEGORY MODAL
+       ========================================== -->
+  <div class="checkout-modal-backdrop" id="addSectionModal">
+    <div class="checkout-modal-card compact-fit-modal" style="max-width:480px;">
+      <div class="checkout-modal-header">
+        <div>
+          <h3>📁 Create New Store Section</h3>
+          <p>Add a brand new section to showcase products on the website.</p>
+        </div>
+        <button type="button" class="checkout-modal-close" onclick="closeAddSectionModal()">&times;</button>
+      </div>
+
+      <div class="checkout-modal-body" style="padding:1.25rem;">
+        <form id="addNewSectionForm" class="compact-form">
+          <div class="form-group-compact" style="margin-bottom:0.75rem;">
+            <label class="form-label-sm" for="newSectionTitle">Section Name / Category Title *</label>
+            <input type="text" id="newSectionTitle" class="form-input-sm" placeholder="e.g. Cold Drinks, Dairy & Milk, Bakery..." required>
+          </div>
+
+          <div class="form-row-grid">
+            <div class="form-group-compact">
+              <label class="form-label-sm" for="newSectionIcon">Icon / Emoji *</label>
+              <select id="newSectionIcon" class="form-select-sm" required>
+                <option value="🥤">🥤 Cold Drinks & Juices</option>
+                <option value="🥛">🥛 Dairy & Fresh Milk</option>
+                <option value="🍞">🍞 Bakery & Bread</option>
+                <option value="🍫">🍫 Chocolates & Sweets</option>
+                <option value="👶">👶 Baby Care Essentials</option>
+                <option value="☕">☕ Coffee & Beverages</option>
+                <option value="🍨">🍨 Ice Creams & Frozen</option>
+                <option value="⚡">⚡ Energy & Health Drinks</option>
+                <option value="🏷️">🏷️ Store Special</option>
+              </select>
+            </div>
+
+            <div class="form-group-compact">
+              <label class="form-label-sm" for="newSectionBadge">Section Badge / Tag</label>
+              <input type="text" id="newSectionBadge" class="form-input-sm" placeholder="e.g. Fresh Daily" value="New Section">
+            </div>
+          </div>
+
+          <div class="form-group-compact" style="margin-bottom:1rem;">
+            <label class="form-label-sm" for="newSectionDesc">Section Description</label>
+            <textarea id="newSectionDesc" class="form-input-sm" rows="2" placeholder="Brief description of products in this section..."></textarea>
+          </div>
+
+          <div style="display:flex; gap:0.5rem; justify-content:flex-end;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="closeAddSectionModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-sm">✨ Create Section</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
        OWNER PIN CONFIRMATION MODAL
        ========================================== -->
   <div class="checkout-modal-backdrop" id="pinVerifyModal">
@@ -946,7 +1026,12 @@
       <div class="checkout-modal-body" style="padding:1.25rem;">
         <form id="addNewProductForm" class="compact-form">
           <div class="form-group-compact" style="margin-bottom:0.75rem;">
-            <label class="form-label-sm" for="newProdCategory">Store Section / Category *</label>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.25rem;">
+              <label class="form-label-sm" for="newProdCategory" style="margin:0;">Store Section / Category *</label>
+              <button type="button" onclick="openAddSectionModal()" style="font-size:0.78rem; color:var(--primary); font-weight:600; background:none; border:none; cursor:pointer; text-decoration:underline;">
+                + Create New Section
+              </button>
+            </div>
             <select id="newProdCategory" class="form-select-sm" required>
               <option value="sugar_tea">Sugar, Tea, Wheat & Rice</option>
               <option value="vegetables">Fresh Vegetables & Fruits</option>

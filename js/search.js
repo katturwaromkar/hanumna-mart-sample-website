@@ -8,13 +8,35 @@ let activeCategory = 'all';
 let searchQuery = '';
 let heroSlideIndex = 0;
 let heroSlideTimer = null;
+let customCategories = [];
+
+function loadStoredCustomCategories() {
+  try {
+    const stored = localStorage.getItem('shree_hanuman_custom_categories_v1');
+    if (stored) {
+      customCategories = JSON.parse(stored);
+    }
+  } catch (e) {
+    console.warn('Could not load custom categories', e);
+  }
+}
+
+function saveCustomCategories() {
+  try {
+    localStorage.setItem('shree_hanuman_custom_categories_v1', JSON.stringify(customCategories));
+  } catch (e) {
+    console.warn('Could not save custom categories', e);
+  }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
+  loadStoredCustomCategories();
+
   const searchInput = document.getElementById('productSearchInput');
-  const filterButtons = document.querySelectorAll('.filter-btn');
 
   // Initial Renders
   initHeroHotDealsRotator();
+  updateCategoryDropdownsAndFilters();
   renderCategoryShowcases();
   renderProducts();
 
@@ -25,16 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
       renderProducts();
     });
   }
-
-  // Category Filter Buttons Listener
-  filterButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      filterButtons.forEach(btn => btn.classList.remove('active'));
-      button.classList.add('active');
-      activeCategory = button.getAttribute('data-category');
-      renderProducts();
-    });
-  });
 });
 
 /* --------------------------------------------------------------------------
@@ -147,6 +159,60 @@ function renderCategoryShowcases() {
       }
     }
   });
+
+  // Render Custom Admin Created Showcase Sections
+  const customContainer = document.getElementById('customCategoryShowcases');
+  if (customContainer) {
+    let customHtml = '';
+    customCategories.forEach((c, idx) => {
+      const items = productsData.filter(p => p.category === c.key);
+      const sectionId = c.key.replace(/_/g, '-') + '-section';
+      const gridId = c.key.replace(/_/g, '') + 'Grid';
+      const bgStyle = (idx % 2 === 0) ? 'background: var(--bg-soft-section);' : '';
+
+      customHtml += `
+        <section class="section category-showcase-section reveal revealed" id="${sectionId}" style="${bgStyle}">
+          <div class="container">
+            <div class="showcase-header-row">
+              <div class="section-header text-left-md">
+                <div class="badge">${c.badge || 'Store Section'}</div>
+                <h2 class="section-title">${c.icon || '🏷️'} <span>${c.label}</span></h2>
+                <p class="section-description">${c.description || ''}</p>
+              </div>
+              <div class="showcase-arrows" style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+                ${isOwnerVerified ? `
+                  <button type="button" class="section-admin-quick-add" onclick="triggerPinCheck('${c.key}')" title="Add Product to ${c.label}">
+                    ➕ Add Product to Section
+                  </button>
+                  <button type="button" class="btn-admin-logout" style="padding:0.25rem 0.6rem; font-size:0.75rem;" onclick="deleteCustomSection('${c.key}')" title="Delete Section">
+                    🗑️ Delete Section
+                  </button>
+                ` : ''}
+                <button type="button" class="showcase-arrow-btn" onclick="scrollShowcase('${gridId}', -280)" aria-label="Previous">&larr;</button>
+                <button type="button" class="showcase-arrow-btn" onclick="scrollShowcase('${gridId}', 280)" aria-label="Next">&rarr;</button>
+              </div>
+            </div>
+
+            <div class="showcase-slider-container">
+              <div class="products-grid showcase-grid-scroll" id="${gridId}">
+                ${items.length > 0 ? renderCardMarkupList(items, true) : `
+                  <div style="padding:2.5rem 1rem; text-align:center; color:var(--text-secondary); width:100%; border:2px dashed var(--border-color); border-radius:12px;">
+                    <p style="font-weight:600; margin-bottom:0.5rem;">No products added to "${c.label}" yet.</p>
+                    ${isOwnerVerified ? `
+                      <button type="button" class="btn btn-primary btn-sm" onclick="triggerPinCheck('${c.key}')">
+                        ➕ Add First Product to ${c.label}
+                      </button>
+                    ` : '<p style="font-size:0.85rem;">Admin can enter PIN 123!@# to add items here.</p>'}
+                  </div>
+                `}
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    });
+    customContainer.innerHTML = customHtml;
+  }
 
   initShowcaseAutoScroll();
 }
@@ -363,6 +429,145 @@ window.openAddProductModalDirectly = function() {
   }
 };
 
+window.showAdminBar = function() {
+  const adminBar = document.getElementById('adminActionBar');
+  if (adminBar) {
+    adminBar.style.display = 'flex';
+  }
+};
+
+window.lockAdminSession = function() {
+  isOwnerVerified = false;
+  const adminBar = document.getElementById('adminActionBar');
+  if (adminBar) {
+    adminBar.style.display = 'none';
+  }
+  renderCategoryShowcases();
+  renderProducts();
+  if (typeof showToastNotification === 'function') {
+    showToastNotification('Admin mode locked.');
+  }
+};
+
+window.openAddSectionModal = function() {
+  if (!isOwnerVerified) {
+    triggerPinCheck('all');
+    return;
+  }
+  const modal = document.getElementById('addSectionModal');
+  const input = document.getElementById('newSectionTitle');
+  if (modal) {
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => input?.focus(), 100);
+  }
+};
+
+window.closeAddSectionModal = function() {
+  const modal = document.getElementById('addSectionModal');
+  if (modal) {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+};
+
+window.deleteCustomSection = function(key) {
+  if (!isOwnerVerified) return;
+  const sec = customCategories.find(c => c.key === key);
+  if (!sec) return;
+
+  if (confirm(`Are you sure you want to delete the section "${sec.label}"?`)) {
+    customCategories = customCategories.filter(c => c.key !== key);
+    saveCustomCategories();
+    updateCategoryDropdownsAndFilters();
+    renderCategoryShowcases();
+    renderProducts();
+    if (typeof showToastNotification === 'function') {
+      showToastNotification(`Section "${sec.label}" deleted.`);
+    }
+  }
+};
+
+function updateCategoryDropdownsAndFilters() {
+  const newCatSelect = document.getElementById('newProdCategory');
+  const editCatSelect = document.getElementById('editProdCategory');
+  const headerCatSelect = document.getElementById('headerCategorySelect');
+
+  const baseOptions = [
+    { value: 'sugar_tea', label: 'Sugar, Tea, Wheat & Rice' },
+    { value: 'vegetables', label: 'Fresh Vegetables & Fruits' },
+    { value: 'wafers_snacks', label: 'Wafers, Biscuits & Snacks' },
+    { value: 'oil', label: 'Cooking Oil & Ghee' },
+    { value: 'pulses', label: 'Pulses & Dal' },
+    { value: 'spices', label: 'Spices & Masala' },
+    { value: 'dryfruits', label: 'Dry Fruits & Nuts' },
+    { value: 'cleaning', label: 'Cleaning & Personal Care' },
+    { value: 'best_value', label: 'Best Value Mega Deals' }
+  ];
+
+  const allCategories = [
+    ...baseOptions,
+    ...customCategories.map(c => ({ value: c.key, label: `${c.icon || '🏷️'} ${c.label}` }))
+  ];
+
+  if (newCatSelect) {
+    const currVal = newCatSelect.value;
+    newCatSelect.innerHTML = allCategories.map(c => `<option value="${c.value}">${c.label}</option>`).join('');
+    if (currVal && allCategories.some(c => c.value === currVal)) newCatSelect.value = currVal;
+  }
+
+  if (editCatSelect) {
+    const currVal = editCatSelect.value;
+    editCatSelect.innerHTML = allCategories.map(c => `<option value="${c.value}">${c.label}</option>`).join('');
+    if (currVal && allCategories.some(c => c.value === currVal)) editCatSelect.value = currVal;
+  }
+
+  if (headerCatSelect) {
+    const currVal = headerCatSelect.value;
+    headerCatSelect.innerHTML = `
+      <option value="all">🔍 Filter Category...</option>
+      <option value="all">All Items</option>
+      ${allCategories.map(c => `<option value="${c.value}">${c.label}</option>`).join('')}
+    `;
+    if (currVal && (currVal === 'all' || allCategories.some(c => c.value === currVal))) {
+      headerCatSelect.value = currVal;
+    }
+  }
+
+  // Update Catalog Category Buttons (#filterCategories)
+  const filterCategoriesContainer = document.getElementById('filterCategories');
+  if (filterCategoriesContainer) {
+    let filterHtml = `
+      <button class="filter-btn ${activeCategory === 'all' ? 'active' : ''}" data-category="all">All Items</button>
+      <button class="filter-btn ${activeCategory === 'sugar_tea' ? 'active' : ''}" data-category="sugar_tea">Sugar, Tea, Wheat & Rice</button>
+      <button class="filter-btn ${activeCategory === 'vegetables' ? 'active' : ''}" data-category="vegetables">Fresh Vegetables</button>
+      <button class="filter-btn ${activeCategory === 'wafers_snacks' ? 'active' : ''}" data-category="wafers_snacks">Wafers & Snacks</button>
+      <button class="filter-btn ${activeCategory === 'oil' ? 'active' : ''}" data-category="oil">Cooking Oil & Ghee</button>
+      <button class="filter-btn ${activeCategory === 'pulses' ? 'active' : ''}" data-category="pulses">Pulses & Dal</button>
+      <button class="filter-btn ${activeCategory === 'spices' ? 'active' : ''}" data-category="spices">Spices & Masala</button>
+      <button class="filter-btn ${activeCategory === 'dryfruits' ? 'active' : ''}" data-category="dryfruits">Dry Fruits</button>
+      <button class="filter-btn ${activeCategory === 'cleaning' ? 'active' : ''}" data-category="cleaning">Cleaning & Personal</button>
+    `;
+
+    customCategories.forEach(c => {
+      filterHtml += `<button class="filter-btn ${activeCategory === c.key ? 'active' : ''}" data-category="${c.key}">${c.icon || '🏷️'} ${c.label}</button>`;
+    });
+
+    filterCategoriesContainer.innerHTML = filterHtml;
+
+    // Rebind filter button listeners
+    const buttons = filterCategoriesContainer.querySelectorAll('.filter-btn');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        buttons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeCategory = btn.getAttribute('data-category');
+        renderProducts();
+      });
+    });
+  }
+}
+
 window.closeAddProductModal = function() {
   const addModal = document.getElementById('addProductModal');
   if (addModal) {
@@ -521,9 +726,11 @@ document.addEventListener('DOMContentLoaded', () => {
       isOwnerVerified = true;
       if (errSpan) errSpan.style.display = 'none';
       closePinModal();
+      showAdminBar();
       openAddProductModalDirectly();
 
       // Re-render UI to show Admin Edit buttons on cards
+      updateCategoryDropdownsAndFilters();
       renderCategoryShowcases();
       renderProducts();
     } else {
@@ -533,6 +740,51 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Incorrect PIN! Access denied.');
       }
     }
+  });
+
+  // Add New Section Form Submission
+  const addSectionForm = document.getElementById('addNewSectionForm');
+  addSectionForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const title = document.getElementById('newSectionTitle').value.trim();
+    const icon = document.getElementById('newSectionIcon').value;
+    const badge = document.getElementById('newSectionBadge').value.trim() || 'New Section';
+    const desc = document.getElementById('newSectionDesc').value.trim();
+
+    if (!title) {
+      alert('Please enter a section name.');
+      return;
+    }
+
+    const categoryKey = 'custom_cat_' + title.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now().toString().slice(-4);
+    const newCat = {
+      key: categoryKey,
+      label: title,
+      icon: icon,
+      badge: badge,
+      description: desc || `Fresh ${title} items available at Shree Hanuman Super Market Warje.`
+    };
+
+    customCategories.push(newCat);
+    saveCustomCategories();
+
+    updateCategoryDropdownsAndFilters();
+    renderCategoryShowcases();
+    renderProducts();
+
+    closeAddSectionModal();
+    addSectionForm.reset();
+
+    if (typeof showToastNotification === 'function') {
+      showToastNotification(`Section "${title}" created successfully!`);
+    } else {
+      alert(`Section "${title}" created successfully!`);
+    }
+
+    // Automatically pre-select new category in Add Product Modal & open it
+    pendingTargetCategory = categoryKey;
+    openAddProductModalDirectly();
   });
 
   // Add New Product Form Submission
@@ -576,12 +828,19 @@ document.addEventListener('DOMContentLoaded', () => {
       best_value: 'Best Value Deals'
     };
 
+    let targetLabel = categoryLabels[category];
+    if (!targetLabel) {
+      const customC = customCategories.find(c => c.key === category);
+      if (customC) targetLabel = customC.label;
+      else targetLabel = 'Daily Essentials';
+    }
+
     const newProdObj = {
       id: 'prod-custom-' + Date.now(),
       name: name,
       brand: brand,
       category: category,
-      categoryLabel: categoryLabels[category] || 'Daily Essentials',
+      categoryLabel: targetLabel,
       weight: weight,
       price: price,
       unit: unit,
