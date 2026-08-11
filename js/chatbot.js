@@ -128,7 +128,7 @@ function processBotResponse(query) {
     oilProducts.forEach(p => {
       res += `<li style="margin-bottom:0.4rem;"><strong>${p.name}</strong> (${p.weight}): <span style="color:var(--primary-color); font-weight:bold;">₹${p.price}</span> / ${p.unit}</li>`;
     });
-    res += `</ul><br><a href="https://wa.me/917083568189?text=Hello%20Jitendra%20Unecha,%20I%20want%20to%20order%20Cooking%20Oil" target="_blank" style="color:var(--primary-color); font-weight:bold; text-decoration:underline;">Click here to Order via WhatsApp</a>`;
+    res += `</ul><br><a href="https://wa.me/917083568189?text=Hello%20Jitendra%20Unecha,%20I%20want%20to%20order%20Cooking%20Oil" target="_blank" rel="noopener noreferrer" style="color:var(--primary-color); font-weight:bold; text-decoration:underline;">Click here to Order via WhatsApp</a>`;
     addBotMessage(res);
     return;
   }
@@ -139,7 +139,7 @@ function processBotResponse(query) {
     riceProducts.forEach(p => {
       res += `<li style="margin-bottom:0.4rem;"><strong>${p.name}</strong> (${p.weight}): <span style="color:var(--primary-color); font-weight:bold;">₹${p.price}</span> / ${p.unit}</li>`;
     });
-    res += `</ul><br><a href="https://wa.me/917083568189?text=Hello%20Jitendra%20Unecha,%20I%20want%20to%20order%20Rice" target="_blank" style="color:var(--primary-color); font-weight:bold; text-decoration:underline;">Order Rice on WhatsApp</a>`;
+    res += `</ul><br><a href="https://wa.me/917083568189?text=Hello%20Jitendra%20Unecha,%20I%20want%20to%20order%20Rice" target="_blank" rel="noopener noreferrer" style="color:var(--primary-color); font-weight:bold; text-decoration:underline;">Order Rice on WhatsApp</a>`;
     addBotMessage(res);
     return;
   }
@@ -163,7 +163,7 @@ function processBotResponse(query) {
   }
 
   if (q.includes('contact') || q.includes('owner') || q.includes('phone') || q.includes('number') || q.includes('jitendra') || q.includes('email')) {
-    addBotMessage(`<strong>📞 Contact Owner Details:</strong><br><br>👤 Owner: <strong>Jitendra Bhanwarlal Unecha</strong><br>📱 Mobile / WhatsApp: <a href="tel:7083568189" style="color:var(--primary-color); font-weight:bold;">7083568189</a><br>✉️ Email: <a href="mailto:jitendraunecha.ju@gmail.com" style="color:var(--primary-color);">jitendraunecha.ju@gmail.com</a><br>📍 Address: Warje Tapodham Corner, Near Jijai Garden, Pune 411058<br><br><a href="https://wa.me/917083568189?text=Hello%20Jitendra%20Unecha,%20I%20got%20your%20number%20from%20website" target="_blank" style="display:inline-block; padding:0.4rem 0.8rem; background:#25D366; color:#FFF; border-radius:6px; font-weight:bold; margin-top:0.5rem; text-decoration:none;">Open WhatsApp Chat</a>`);
+    addBotMessage(`<strong>📞 Contact Owner Details:</strong><br><br>👤 Owner: <strong>Jitendra Bhanwarlal Unecha</strong><br>📱 Mobile / WhatsApp: <a href="tel:7083568189" style="color:var(--primary-color); font-weight:bold;">7083568189</a><br>✉️ Email: <a href="mailto:jitendraunecha.ju@gmail.com" style="color:var(--primary-color);">jitendraunecha.ju@gmail.com</a><br>📍 Address: Warje Tapodham Corner, Near Jijai Garden, Pune 411058<br><br><a href="https://wa.me/917083568189?text=Hello%20Jitendra%20Unecha,%20I%20got%20your%20number%20from%20website" target="_blank" rel="noopener noreferrer" style="display:inline-block; padding:0.4rem 0.8rem; background:#25D366; color:#FFF; border-radius:6px; font-weight:bold; margin-top:0.5rem; text-decoration:none;">Open WhatsApp Chat</a>`);
     return;
   }
 
@@ -173,6 +173,6 @@ function processBotResponse(query) {
     const item = searchResults[0];
     addBotMessage(`Found product: <strong>${item.name}</strong><br>Brand: ${item.brand}<br>Packaging: ${item.weight}<br>Price: <span style="color:var(--primary-color); font-weight:bold;">₹${item.price}</span> / ${item.unit}<br><br>Call owner <strong>Jitendra Unecha</strong> at <strong>7083568189</strong> to confirm order.`);
   } else {
-    addBotMessage(`Thank you for your enquiry! 😊<br><br>For custom product quotes or daily rate updates, please call owner <strong>Jitendra Bhanwarlal Unecha</strong> directly at <a href="tel:7083568189" style="color:var(--primary-color); font-weight:bold;">7083568189</a> or chat on <a href="https://wa.me/917083568189" target="_blank" style="color:#25D366; font-weight:bold;">WhatsApp</a>.`);
+    addBotMessage(`Thank you for your enquiry! 😊<br><br>For custom product quotes or daily rate updates, please call owner <strong>Jitendra Bhanwarlal Unecha</strong> directly at <a href="tel:7083568189" style="color:var(--primary-color); font-weight:bold;">7083568189</a> or chat on <a href="https://wa.me/917083568189" target="_blank" rel="noopener noreferrer" style="color:#25D366; font-weight:bold;">WhatsApp</a>.`);
   }
 }
