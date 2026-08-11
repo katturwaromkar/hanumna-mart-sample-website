@@ -268,10 +268,27 @@
   html, body {
     overflow-x: hidden !important;
     width: 100% !important;
+    max-width: 100% !important;
+    position: relative;
+    touch-action: manipulation !important;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  /* Prevent auto-zoom on mobile when focusing inputs/selects */
+  input, select, textarea, .header-cat-select, .search-input, .cart-input {
+    font-size: 16px !important;
+  }
+
+  .header-stacked-container,
+  .header-nav-row {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   .header-stacked-container {
-    padding: 0.5rem 0.85rem !important;
+    padding: 0.5rem 0.75rem !important;
   }
 
   .categories-header-wrapper {
@@ -422,22 +439,49 @@
     overflow: hidden !important;
   }
 
+  .nav-actions {
+    gap: 0.25rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    box-sizing: border-box !important;
+  }
+
   .header-cat-select {
     flex: 1 1 auto !important;
-    max-width: 145px !important;
-    font-size: 0.76rem !important;
-    padding: 0.35rem 0.5rem !important;
+    min-width: 0 !important;
+    max-width: 38% !important;
+    font-size: 16px !important;
+    padding: 0.35rem 0.4rem !important;
     text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
   }
 
-  .nav-actions {
-    gap: 0.3rem !important;
-  }
-
-  .cart-btn-header,
-  .whatsapp-btn-header {
-    padding: 0.35rem 0.6rem !important;
+  .btn-cart-header,
+  .btn-whatsapp {
+    flex: 0 0 auto !important;
+    padding: 0.35rem 0.55rem !important;
     font-size: 0.78rem !important;
+    white-space: nowrap !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .btn-cart-header > span:not(.cart-badge-num):not(.cart-total-pill) {
+    display: none !important; /* Hide the word 'Cart' to save horizontal space on small screens */
+  }
+
+  .btn-cart-header {
+    padding: 0.35rem 0.45rem !important;
+    gap: 0.25rem !important;
+  }
+
+  .btn-whatsapp {
+    padding: 0.35rem 0.45rem !important;
+    font-size: 0.75rem !important;
   }
 }
 
@@ -459,7 +503,23 @@
   }
 
   .header-cat-select {
-    max-width: 120px !important;
+    max-width: 34% !important;
+    font-size: 16px !important;
+    padding: 0.3rem 0.35rem !important;
+  }
+
+  .btn-cart-header {
+    padding: 0.3rem 0.4rem !important;
+    font-size: 0.72rem !important;
+  }
+
+  .cart-total-pill {
+    padding: 0.1rem 0.3rem !important;
+    font-size: 0.72rem !important;
+  }
+
+  .btn-whatsapp {
+    padding: 0.3rem 0.4rem !important;
     font-size: 0.72rem !important;
   }
 
