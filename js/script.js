@@ -429,3 +429,62 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+/* ==========================================================================
+   Comprehensive Anti-Zoom Protection (Prevents zoom in & zoom out on all devices)
+   ========================================================================== */
+(function setupAntiZoomProtection() {
+  // 1. Prevent Multi-touch / Pinch-to-zoom on touch screens
+  document.addEventListener('touchstart', (e) => {
+    if (e.touches && e.touches.length > 1) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  document.addEventListener('touchmove', (e) => {
+    if (e.touches && e.touches.length > 1) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  // 2. Prevent iOS Safari Gesture Zooming (Pinch in/out)
+  ['gesturestart', 'gesturechange', 'gestureend'].forEach((eventName) => {
+    document.addEventListener(eventName, (e) => {
+      e.preventDefault();
+    }, { passive: false });
+  });
+
+  // 3. Prevent Desktop Trackpad & Mouse Wheel Zoom (Ctrl/Cmd + Wheel)
+  document.addEventListener('wheel', (e) => {
+    if (e.ctrlKey || e.metaKey) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  // 4. Prevent Keyboard Shortcut Zooming (Ctrl/Cmd + '+', '-', '=', '0', Numpad +, Numpad -)
+  document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey || e.metaKey) {
+      const zoomKeys = ['+', '-', '=', '0', 'NumpadAdd', 'NumpadSubtract', 'Numpad0'];
+      const keyCodes = [187, 189, 107, 109, 48, 96, 61, 173];
+      if (zoomKeys.includes(e.key) || zoomKeys.includes(e.code) || keyCodes.includes(e.keyCode)) {
+        e.preventDefault();
+      }
+    }
+  }, { passive: false });
+
+  // 5. Prevent Double-Tap Zooming on Mobile Touch
+  let lastTouchEndTime = 0;
+  document.addEventListener('touchend', (e) => {
+    const currentTime = new Date().getTime();
+    const tapLength = currentTime - lastTouchEndTime;
+    if (tapLength < 300 && tapLength > 0) {
+      const target = e.target;
+      const isInteractive = target && target.closest && target.closest('input, textarea, select, button, a, label, [role="button"]');
+      if (!isInteractive) {
+        e.preventDefault();
+      }
+    }
+    lastTouchEndTime = currentTime;
+  }, { passive: false });
+})();
+
+
