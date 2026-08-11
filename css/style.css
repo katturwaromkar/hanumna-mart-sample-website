@@ -1426,6 +1426,108 @@ html, body {
   gap: 0.75rem;
 }
 
+/* Card Cart & Quantity Controls */
+.card-cart-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+  margin-bottom: 0.4rem;
+}
+
+.card-qty-wrapper {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  background: #F8F9FA;
+  flex-shrink: 0;
+}
+
+.card-qty-btn {
+  width: 28px;
+  height: 32px;
+  background: none;
+  border: none;
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.card-qty-btn:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.card-qty-input {
+  width: 32px;
+  height: 32px;
+  border: none;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  background: transparent;
+  color: var(--text-primary);
+  outline: none;
+  -moz-appearance: textfield;
+}
+
+.card-qty-input::-webkit-outer-spin-button,
+.card-qty-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.card-cart-controls .btn-cart {
+  flex: 1;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border-radius: var(--radius-pill);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  background: var(--button-gradient);
+  color: #FFFFFF;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px var(--primary-glow);
+  transition: var(--transition-fast);
+}
+
+.card-cart-controls .btn-cart:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px var(--primary-glow);
+}
+
+.product-actions-sub {
+  margin-top: 0.35rem;
+  display: flex;
+  align-items: center;
+}
+
+.btn-sub-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.76rem;
+  color: var(--secondary-green);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.btn-sub-link:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
 .no-products {
   grid-column: 1 / -1;
   text-align: center;
