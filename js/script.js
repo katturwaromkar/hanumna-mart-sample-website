@@ -5,9 +5,11 @@
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Sticky Glass Navbar on Scroll
+  // 1. Sticky Glass Navbar on Scroll & Floating Action Column Auto-Hide on Scroll
   const header = document.getElementById('mainHeader');
   const scrollTopBtn = document.getElementById('scrollTopBtn');
+  const floatingActions = document.getElementById('floatingActionsColumn');
+  let scrollTimeout = null;
 
   window.addEventListener('scroll', () => {
     if (window.scrollY > 50) {
@@ -21,7 +23,31 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       scrollTopBtn?.classList.remove('visible');
     }
+
+    // Auto-Hide floating icons while scrolling & show when scroll stops
+    if (floatingActions) {
+      floatingActions.classList.add('is-scrolling');
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        floatingActions.classList.remove('is-scrolling');
+      }, 350);
+    }
   });
+
+  // Subnav Horizontal Menu Scroll Arrows
+  const subnavContainer = document.getElementById('navMenu');
+  const subnavLeftBtn = document.getElementById('subnavScrollLeft');
+  const subnavRightBtn = document.getElementById('subnavScrollRight');
+
+  if (subnavContainer) {
+    subnavLeftBtn?.addEventListener('click', () => {
+      subnavContainer.scrollBy({ left: -220, behavior: 'smooth' });
+    });
+
+    subnavRightBtn?.addEventListener('click', () => {
+      subnavContainer.scrollBy({ left: 220, behavior: 'smooth' });
+    });
+  }
 
   // Scroll to Top Click
   scrollTopBtn?.addEventListener('click', () => {
@@ -550,5 +576,26 @@ window.closeAdminOrdersModal = function() {
     document.body.style.overflow = '';
   }
 };
+
+// Language Selector Dropdown Toggle
+window.toggleLangDropdown = function() {
+  const dropdown = document.getElementById('langDropdown');
+  const label = document.getElementById('currentLangLabel');
+  if (dropdown) {
+    dropdown.classList.toggle('active');
+  }
+  if (window.i18n && label) {
+    label.textContent = window.i18n.getCurrentLang().toUpperCase();
+  }
+};
+
+document.addEventListener('click', (e) => {
+  const container = document.querySelector('.lang-selector-container');
+  const dropdown = document.getElementById('langDropdown');
+  if (container && dropdown && !container.contains(e.target)) {
+    dropdown.classList.remove('active');
+  }
+});
+
 
 

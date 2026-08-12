@@ -40,6 +40,14 @@ document.addEventListener('DOMContentLoaded', () => {
   renderCategoryShowcases();
   renderProducts();
 
+  // Re-render showcases and product cards on language switch
+  window.addEventListener('languageChanged', () => {
+    initHeroHotDealsRotator();
+    updateCategoryDropdownsAndFilters();
+    renderCategoryShowcases();
+    renderProducts();
+  });
+
   // Option 2 Cloud Sync: Fetch live products, sections & overrides from Cloud DB across all devices
   if (window.CloudDB && typeof window.CloudDB.initCloudSync === 'function') {
     window.CloudDB.initCloudSync((changed) => {
@@ -270,6 +278,9 @@ function scrollTrackRight(trackId) {
 
 // Generate Product Card HTML (Includes Admin Edit Button when verified)
 function renderCardMarkupList(itemList, isCompact = false) {
+  const addTxt = window.i18n ? window.i18n.t('addToCart') : 'Add to Cart';
+  const stockTxt = window.i18n ? window.i18n.t('inStock') : 'In Stock';
+
   return itemList.map(product => {
     // Professional Clean WhatsApp Message (No decorative asterisks clutter)
     const cleanMsg = `GROCERY ENQUIRY - SHREE HANUMAN SUPER MARKET\n\nProduct: ${product.name}\nBrand: ${product.brand}\nPack: ${product.weight}\nPrice: Rs.${product.price} / ${product.unit}\n\nPlease confirm stock availability.`;
@@ -298,7 +309,7 @@ function renderCardMarkupList(itemList, isCompact = false) {
               <span class="price-label">Price</span>
               <div class="product-price">₹${product.price.toLocaleString('en-IN')} <span style="font-size:0.8rem; font-weight:normal; color:var(--text-secondary);">/ ${product.unit}</span></div>
             </div>
-            <span class="stock-status-tag">${product.availability}</span>
+            <span class="stock-status-tag">${product.availability === 'In Stock' ? stockTxt : product.availability}</span>
           </div>
 
           <div class="card-cart-controls">
@@ -312,7 +323,7 @@ function renderCardMarkupList(itemList, isCompact = false) {
               <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/>
               </svg>
-              Add
+              ${addTxt}
             </button>
           </div>
 

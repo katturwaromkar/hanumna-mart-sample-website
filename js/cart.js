@@ -295,13 +295,20 @@ function handleCheckoutOrderSubmit(e) {
     dateStyle: 'medium',
     timeStyle: 'short'
   });
-  const orderNumber = `HSM-${Date.now().toString(36).toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}`;
 
-  // Construct WhatsApp formatted Receipt String for Owner
+  // Incremental Receipt Counter starting strictly from 1
+  let currentCounter = parseInt(localStorage.getItem('hsm_receipt_counter') || '1', 10);
+  if (isNaN(currentCounter) || currentCounter < 1) {
+    currentCounter = 1;
+  }
+  const orderNumber = `HSM-${String(currentCounter).padStart(4, '0')}`;
+  localStorage.setItem('hsm_receipt_counter', currentCounter + 1);
+
+  // Construct WhatsApp formatted Receipt String for Store Owner (+91 7083568189)
   let waReceipt = `===================================\n`;
   waReceipt += `SHRI HANUMAN SUPER MARKET - TAX INVOICE\n`;
   waReceipt += `===================================\n`;
-  waReceipt += `Invoice No: ${orderNumber}\n`;
+  waReceipt += `Invoice No: ${orderNumber} (#${currentCounter})\n`;
   waReceipt += `Date: ${dateStr}\n`;
   waReceipt += `Fulfillment: ${orderType}\n\n`;
   waReceipt += `CUSTOMER DETAILS:\n`;
@@ -322,7 +329,7 @@ function handleCheckoutOrderSubmit(e) {
   waReceipt += `Delivery Charge: FREE (Rs.0)\n`;
   waReceipt += `TOTAL PAYABLE AMOUNT: Rs.${grandTotal.toLocaleString('en-IN')}\n`;
   waReceipt += `===================================\n\n`;
-  waReceipt += `Store: Tapodham Corner, Tapodham Society, Near Jijai Garden, Warje, Pune 411058\n`;
+  waReceipt += `Store Location: Tapodham Corner, Near Jijai Garden, Warje, Pune 411058\n`;
   waReceipt += `Proprietor: Jitendra Bhanwarlal Unecha (+91 7083568189)`;
 
   const encodedUrl = `https://wa.me/917083568189?text=${encodeURIComponent(waReceipt)}`;
@@ -336,7 +343,8 @@ function handleCheckoutOrderSubmit(e) {
     timing,
     payment,
     notes,
-    grandTotal
+    grandTotal,
+    orderNumber
   };
 
   if (window.CloudDB && typeof window.CloudDB.createOrder === 'function') {
@@ -388,14 +396,14 @@ function handleCheckoutOrderSubmit(e) {
   clearCart();
   closeCheckoutModal();
 
-  // Show Toast & Open Tax Invoice Receipt Modal
-  showToastNotification("🎉 Order placed! Opening bill receipt...");
+  // Show Toast & FIRST open Tax Invoice Receipt Modal
+  showToastNotification(`🎉 Receipt ${orderNumber} generated!`);
   openReceiptModal();
 
-  // Auto-launch WhatsApp link in background tab to notify store owner
+  // Share order message on WhatsApp to shop owner
   setTimeout(() => {
     window.open(encodedUrl, '_blank');
-  }, 1000);
+  }, 1200);
 }
 
 // Receipt Modal Controls & Print Function
