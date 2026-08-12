@@ -487,4 +487,68 @@ document.addEventListener('DOMContentLoaded', () => {
   }, { passive: false });
 })();
 
+/* ==========================================================================
+   ADMIN ORDERS DASHBOARD MODAL CONTROL
+   ========================================================================== */
+window.openAdminOrdersModal = async function() {
+  const modal = document.getElementById('adminOrdersModal');
+  const container = document.getElementById('adminOrdersListContainer');
+  if (!modal || !container) return;
+
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+
+  container.innerHTML = `<div style="padding:2rem; text-align:center; color:var(--text-secondary);">🔄 Loading live placed orders from Supabase PostgreSQL database...</div>`;
+
+  if (window.CloudDB && typeof window.CloudDB.fetchOrders === 'function') {
+    const ordersList = await window.CloudDB.fetchOrders();
+    if (Array.isArray(ordersList) && ordersList.length > 0) {
+      container.innerHTML = ordersList.map(ord => {
+        const items = ord.order_items || [];
+        const itemsHtml = items.map(item => `
+          <div style="font-size:0.84rem; display:flex; justify-content:space-between; padding:0.25rem 0; border-bottom:1px dashed var(--border-color);">
+            <span>${item.product_name} (${item.weight || ''}) &times; ${item.quantity}</span>
+            <strong>₹${item.subtotal}</strong>
+          </div>
+        `).join('');
+
+        const formattedDate = new Date(ord.created_at).toLocaleString('en-IN', {
+          dateStyle: 'medium',
+          timeStyle: 'short'
+        });
+
+        return `
+          <div style="background:#FFF8F3; border:1px solid var(--border-hover); border-radius:10px; padding:1rem; margin-bottom:1rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; flex-wrap:wrap; gap:0.5rem;">
+              <strong style="color:var(--primary-color); font-size:0.95rem;">${ord.order_number}</strong>
+              <span style="font-size:0.75rem; background:#FFFFFF; padding:0.2rem 0.5rem; border-radius:12px; border:1px solid var(--border-color); color:var(--text-secondary);">${formattedDate}</span>
+            </div>
+            <div style="font-size:0.88rem; font-weight:600; color:var(--text-primary);">${ord.customer_name} (${ord.customer_phone})</div>
+            <div style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:0.5rem;">Option: <strong>${ord.fulfillment_type || 'Home Delivery'}</strong> | Address: ${ord.delivery_address || 'Self Pickup'}</div>
+            <div style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:0.5rem;">Slot: ${ord.time_slot || 'ASAP'} | Payment: ${ord.payment_method || 'COD'}</div>
+            <div style="margin-top:0.5rem; padding-top:0.5rem; border-top:1px solid var(--border-hover);">
+              <div style="font-size:0.8rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.3rem;">Order Items:</div>
+              ${itemsHtml}
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.6rem; font-weight:bold; font-size:0.95rem; color:var(--text-primary);">
+                <span>Total Amount:</span>
+                <span style="color:var(--primary-color);">₹${ord.grand_total}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    } else {
+      container.innerHTML = `<div style="padding:2.5rem 1rem; text-align:center; color:var(--text-secondary);">No orders recorded in Supabase PostgreSQL yet. Placed customer orders will appear here live across all devices!</div>`;
+    }
+  }
+};
+
+window.closeAdminOrdersModal = function() {
+  const modal = document.getElementById('adminOrdersModal');
+  if (modal) {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+};
+
 

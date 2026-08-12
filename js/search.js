@@ -243,37 +243,13 @@ function renderCategoryShowcases() {
   initShowcaseAutoScroll();
 }
 
-// Auto Left-To-Right Continuous Horizontal Scroll Loop for Showcase Sections
+// Auto Left-To-Right Continuous Horizontal Scroll Loop for Showcase Sections (Disabled to stop auto-scroll)
 let showcaseScrollIntervals = [];
 
 function initShowcaseAutoScroll() {
-  // Clear any existing intervals
+  // Clear any existing intervals and stop continuous auto-scrolling
   showcaseScrollIntervals.forEach(inv => clearInterval(inv));
   showcaseScrollIntervals = [];
-
-  const scrollContainers = document.querySelectorAll('.showcase-grid-scroll');
-
-  scrollContainers.forEach(container => {
-    let isInteracting = false;
-
-    container.addEventListener('mouseenter', () => { isInteracting = true; });
-    container.addEventListener('mouseleave', () => { isInteracting = false; });
-    container.addEventListener('touchstart', () => { isInteracting = true; }, { passive: true });
-    container.addEventListener('touchend', () => { isInteracting = false; });
-
-    const timer = setInterval(() => {
-      if (isInteracting) return;
-
-      // Smooth scroll left-to-right
-      if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 10) {
-        container.scrollTo({ left: 0, behavior: 'smooth' });
-      } else {
-        container.scrollBy({ left: 1.5, behavior: 'auto' });
-      }
-    }, 30);
-
-    showcaseScrollIntervals.push(timer);
-  });
 }
 
 // Global Left / Right Manual Scroll Helper for Showcase Sections

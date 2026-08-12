@@ -47,6 +47,9 @@
   <link rel="stylesheet" href="css/responsive.css">
   <link rel="stylesheet" href="css/animations.css">
 
+  <!-- Official Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <!-- Official Favicon -->
   <link rel="icon" type="image/jpeg" href="images/logo.jpg">
 
@@ -868,6 +871,14 @@
         </div>
 
         <form id="checkoutOrderForm" class="checkout-form compact-form">
+          <div class="form-group-compact">
+            <label class="form-label-sm" for="custOrderType">Order Option / Fulfillment *</label>
+            <select id="custOrderType" class="form-select-sm" required onchange="handleOrderTypeChange(this.value)">
+              <option value="Home Delivery">🚚 Home Delivery (Doorstep Delivery in Pune)</option>
+              <option value="Takeaway / Store Pickup">🛍️ Takeaway / Self Store Pickup (Tapodham Corner, Warje)</option>
+            </select>
+          </div>
+
           <div class="form-row-grid">
             <div class="form-group-compact">
               <label class="form-label-sm" for="custName">Customer Name *</label>
@@ -881,19 +892,19 @@
           </div>
 
           <div class="form-group-compact">
-            <label class="form-label-sm" for="custAddress">Delivery Address in Pune *</label>
+            <label class="form-label-sm" for="custAddress" id="custAddressLabel">Delivery Address in Pune *</label>
             <input type="text" id="custAddress" class="form-input-sm" placeholder="e.g. Flat 302, Sai Heights, Tapodham Corner, Warje, Pune" required>
           </div>
 
           <div class="form-row-grid">
             <div class="form-group-compact">
-              <label class="form-label-sm" for="custTiming">Preferred Delivery Slot *</label>
+              <label class="form-label-sm" for="custTiming" id="custTimingLabel">Preferred Delivery / Pickup Slot *</label>
               <select id="custTiming" class="form-select-sm" required>
                 <option value="Morning Slot (8:00 AM - 11:00 AM)">Morning Slot (8 AM - 11 AM)</option>
                 <option value="Afternoon Slot (12:00 PM - 3:00 PM)">Afternoon Slot (12 PM - 3 PM)</option>
                 <option value="Evening Slot (4:00 PM - 7:00 PM)">Evening Slot (4 PM - 7 PM)</option>
                 <option value="Night Slot (7:00 PM - 9:30 PM)">Night Slot (7 PM - 9:30 PM)</option>
-                <option value="Express Urgent Delivery (ASAP)">Express Urgent Delivery (ASAP)</option>
+                <option value="Express Urgent (ASAP)">Express Urgent (ASAP)</option>
               </select>
             </div>
 
@@ -958,6 +969,9 @@
         <span id="cloudSyncStatusBadge" class="admin-status-badge" style="background:rgba(16,185,129,0.15); border-color:rgba(16,185,129,0.4); color:#059669; font-size:0.75rem; padding:0.25rem 0.6rem;">☁️ Live Sync Active</span>
       </div>
       <div class="admin-btn-group">
+        <button type="button" class="btn btn-admin-action" onclick="openAdminOrdersModal()">
+          📦 Live Orders
+        </button>
         <button type="button" class="btn btn-admin-action" onclick="openAddSectionModal()">
           📁 + Add Section
         </button>
@@ -967,6 +981,27 @@
         <button type="button" class="btn btn-admin-logout" onclick="lockAdminSession()">
           🔒 Exit
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ADMIN ORDERS DASHBOARD -->
+  <div class="checkout-modal-backdrop" id="adminOrdersModal">
+    <div class="checkout-modal-card compact-fit-modal" style="max-width:640px; max-height:85vh; overflow-y:auto;">
+      <div class="checkout-modal-header">
+        <div>
+          <h3>📦 Live Store Placed Orders (Supabase)</h3>
+          <p>Orders recorded live from customer devices across Pune.</p>
+        </div>
+        <button type="button" class="checkout-modal-close" onclick="closeAdminOrdersModal()">&times;</button>
+      </div>
+      <div class="checkout-modal-body">
+        <div id="adminOrdersListContainer">
+          <!-- Rendered dynamically from Supabase database -->
+        </div>
+        <div style="display:flex; justify-content:flex-end; margin-top:1rem;">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="closeAdminOrdersModal()">Close Dashboard</button>
+        </div>
       </div>
     </div>
   </div>

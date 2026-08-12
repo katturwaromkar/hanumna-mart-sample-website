@@ -928,16 +928,16 @@ const productsData = [
   }
 ];
 
-// Load Custom Products and Edited Overrides from localStorage
+// Custom Products and Overrides Cache Keys
 const CUSTOM_PRODUCTS_KEY = 'shree_hanuman_custom_products_v1';
 const EDITED_OVERRIDES_KEY = 'shree_hanuman_edited_overrides_v1';
 
+// Initial local runtime cache load (Supabase overrides this on initCloudSync)
 try {
   const savedCustomProds = localStorage.getItem(CUSTOM_PRODUCTS_KEY);
   if (savedCustomProds) {
     const parsed = JSON.parse(savedCustomProds);
     if (Array.isArray(parsed) && parsed.length > 0) {
-      // Avoid duplicate keys
       parsed.forEach(cp => {
         if (!productsData.some(p => p.id === cp.id)) {
           productsData.unshift(cp);
@@ -959,22 +959,29 @@ try {
     }
   }
 } catch (e) {
-  console.warn("Could not load custom products/overrides from localStorage", e);
+  console.warn("Could not load runtime cache from localStorage", e);
 }
 
-// Function to add new product dynamically & persist to localStorage + Cloud DB
+// Function to add new product dynamically & publish to Supabase Cloud DB
 function addNewProductToDataset(prodObj) {
-  productsData.unshift(prodObj);
+  const existingIdx = productsData.findIndex(p => p.id === prodObj.id);
+  if (existingIdx !== -1) {
+    productsData[existingIdx] = { ...productsData[existingIdx], ...prodObj };
+  } else {
+    productsData.unshift(prodObj);
+  }
 
   try {
     const existingCustom = JSON.parse(localStorage.getItem(CUSTOM_PRODUCTS_KEY) || '[]');
-    existingCustom.unshift(prodObj);
-    localStorage.setItem(CUSTOM_PRODUCTS_KEY, JSON.stringify(existingCustom));
+    if (!existingCustom.some(cp => cp.id === prodObj.id)) {
+      existingCustom.unshift(prodObj);
+      localStorage.setItem(CUSTOM_PRODUCTS_KEY, JSON.stringify(existingCustom));
+    }
   } catch (e) {
-    console.error("Failed to save custom product to localStorage", e);
+    console.error("Failed to update runtime cache in localStorage", e);
   }
 
-  // Option 2 Cloud Sync: Push to Cloud Database for real-time worldwide access across all devices
+  // Publish directly to Supabase PostgreSQL Database for multi-device live sync
   if (window.CloudDB && typeof window.CloudDB.saveProduct === 'function') {
     window.CloudDB.saveProduct(prodObj);
   }

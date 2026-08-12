@@ -8,6 +8,74 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+model products {
+  id            String   @id
+  name          String
+  brand         String?
+  category      String
+  categoryLabel String?  @map("category_label")
+  weight        String?
+  price         Float    @default(0.0)
+  mrp           Float?
+  unit          String?  @default("pack")
+  availability  String?  @default("In Stock")
+  badge         String?
+  featuredHero  Boolean? @default(false) @map("featured_hero")
+  image         String?
+  description   String?
+  active        Boolean? @default(true)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model categories {
+  id           String   @id @default(uuid())
+  key          String   @unique
+  label        String
+  icon         String?  @default("🏷️")
+  badge        String?  @default("Store Section")
+  description  String?
+  isCustom     Boolean? @default(true) @map("is_custom")
+  displayOrder Int?     @default(0) @map("display_order")
+  active       Boolean? @default(true)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model orders {
+  id              String        @id @default(uuid())
+  orderNumber     String        @unique @map("order_number")
+  customerName    String        @map("customer_name")
+  customerPhone   String        @map("customer_phone")
+  fulfillmentType String?       @default("Home Delivery") @map("fulfillment_type")
+  deliveryAddress String?       @map("delivery_address")
+  timeSlot        String?       @map("time_slot")
+  paymentMethod   String?       @default("Cash on Delivery (COD)") @map("payment_method")
+  paymentStatus   String?       @default("Pending") @map("payment_status")
+  orderStatus     String?       @default("Pending") @map("order_status")
+  subtotal        Float         @default(0.0)
+  deliveryCharge  Float?        @default(0.0) @map("delivery_charge")
+  grandTotal      Float         @default(0.0) @map("grand_total")
+  notes           String?
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @default(now()) @updatedAt @map("updated_at")
+  items           order_items[]
+}
+
+model order_items {
+  id          String   @id @default(uuid())
+  orderId     String   @map("order_id")
+  productId   String?  @map("product_id")
+  productName String   @map("product_name")
+  brand       String?
+  weight      String?
+  unitPrice   Float    @default(0.0) @map("unit_price")
+  quantity    Int      @default(1)
+  subtotal    Float    @default(0.0)
+  createdAt   DateTime @default(now()) @map("created_at")
+  order       orders   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
 model custom_categories {
   id        String   @id @default(uuid())
   key       String   @unique

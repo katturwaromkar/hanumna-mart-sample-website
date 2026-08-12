@@ -242,6 +242,28 @@ function closeCheckoutModal() {
   }
 }
 
+function handleOrderTypeChange(val) {
+  const addressInput = document.getElementById('custAddress');
+  const addressLabel = document.getElementById('custAddressLabel');
+  const timingLabel = document.getElementById('custTimingLabel');
+
+  if (val && val.includes('Takeaway')) {
+    if (addressLabel) addressLabel.textContent = 'Store Pickup Location (Optional)';
+    if (addressInput) {
+      addressInput.placeholder = 'Self Store Pickup - Tapodham Corner, Warje, Pune';
+      addressInput.required = false;
+    }
+    if (timingLabel) timingLabel.textContent = 'Preferred Pickup Slot *';
+  } else {
+    if (addressLabel) addressLabel.textContent = 'Delivery Address in Pune *';
+    if (addressInput) {
+      addressInput.placeholder = 'e.g. Flat 302, Sai Heights, Tapodham Corner, Warje, Pune';
+      addressInput.required = true;
+    }
+    if (timingLabel) timingLabel.textContent = 'Preferred Delivery Slot *';
+  }
+}
+
 // Form Submit Handler for Order Placement via WhatsApp
 function handleCheckoutOrderSubmit(e) {
   e.preventDefault();
@@ -251,14 +273,19 @@ function handleCheckoutOrderSubmit(e) {
     return;
   }
 
+  const orderType = document.getElementById('custOrderType')?.value || 'Home Delivery';
   const name = document.getElementById('custName').value.trim();
   const phone = document.getElementById('custPhone').value.trim();
-  const address = document.getElementById('custAddress').value.trim();
+  let address = document.getElementById('custAddress').value.trim();
   const timing = document.getElementById('custTiming').value;
   const payment = document.getElementById('custPayment').value;
   const notes = document.getElementById('custNotes').value.trim();
 
-  if (!name || !phone || !address) {
+  if (orderType.includes('Takeaway') && !address) {
+    address = "Self Store Pickup (Tapodham Corner, Tapodham Society, Near Jijai Garden, Warje, Pune - 411058)";
+  }
+
+  if (!name || !phone || (!address && !orderType.includes('Takeaway'))) {
     alert("Please fill in your Name, Phone Number, and Delivery Address.");
     return;
   }
@@ -272,11 +299,12 @@ function handleCheckoutOrderSubmit(e) {
 
   // WhatsApp formatted string - Professional, clean format with no extra decoration
   let message = `New Grocery Order - Shree Hanuman Super Market\n\n`;
+  message += `Order Option: ${orderType}\n`;
   message += `Customer Details:\n`;
   message += `Name: ${name}\n`;
   message += `Phone: ${phone}\n`;
-  message += `Delivery Address: ${address}\n`;
-  message += `Delivery Slot: ${timing}\n`;
+  message += `Fulfillment/Address: ${address}\n`;
+  message += `Time Slot: ${timing}\n`;
   message += `Payment Option: ${payment}\n`;
   if (notes) {
     message += `Order Notes: ${notes}\n`;
@@ -284,16 +312,36 @@ function handleCheckoutOrderSubmit(e) {
   message += `\nOrdered Items:\n`;
   message += itemsListText;
   message += `\n\nTotal Payable Amount: ₹${grandTotal.toLocaleString('en-IN')}\n\n`;
-  message += `Please confirm order availability and delivery time slot.`;
+  message += `Please confirm order availability and fulfillment time slot.`;
 
   const encodedUrl = `https://wa.me/917083568189?text=${encodeURIComponent(message)}`;
+
+  // Save order header & line items directly into Supabase PostgreSQL Database
+  const orderPayload = {
+    name,
+    phone,
+    orderType,
+    address,
+    timing,
+    payment,
+    notes,
+    grandTotal
+  };
+
+  if (window.CloudDB && typeof window.CloudDB.createOrder === 'function') {
+    window.CloudDB.createOrder(orderPayload, cartState).then(res => {
+      if (res && res.orderNumber) {
+        console.log("☁️ Order recorded in Supabase:", res.orderNumber);
+      }
+    }).catch(err => console.warn("Supabase order recording warning:", err));
+  }
 
   // Clear cart after submitting
   clearCart();
   closeCheckoutModal();
 
-  // Show success modal or toast
-  showToastNotification("Order prepared! Opening WhatsApp to send to store owner...");
+  // Show success toast notification
+  showToastNotification("Order saved & prepared! Opening WhatsApp to notify store owner...");
 
   // Open WhatsApp in new tab
   window.open(encodedUrl, '_blank');

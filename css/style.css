@@ -921,6 +921,9 @@ button {
   position: relative;
   transition: var(--transition-fast);
   box-shadow: var(--shadow-sm);
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .product-card:hover {
@@ -932,6 +935,8 @@ button {
 .product-card-compact {
   flex: 0 0 250px;
   width: 250px;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .product-badge {
