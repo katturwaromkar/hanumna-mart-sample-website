@@ -1,0 +1,26 @@
+{
+  "name": "05b_hanuman-sample-website",
+  "version": "1.0.0",
+  "description": "A modern, responsive super market and grocery website for **Shree Hanuman Super Market** (Owner: **Jitendra Bhanwarlal Unecha**), built using pure **HTML5**, **CSS3**, and **Vanilla JavaScript**. Designed with luxury Spotify/Apple dark aesthetics, Deep Emerald Green accent (`#0E7A55`), glassmorphism, interactive product search, dynamic price catalog, floating quick actions, interactive AI chatbot, theme switcher, and location map.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/katturwaromkar/hanumna-mart-sample-website.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/katturwaromkar/hanumna-mart-sample-website/issues"
+  },
+  "homepage": "https://github.com/katturwaromkar/hanumna-mart-sample-website#readme",
+  "devDependencies": {
+    "prisma": "^6.19.3"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.3"
+  }
+}

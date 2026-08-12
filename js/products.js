@@ -928,21 +928,41 @@ const productsData = [
   }
 ];
 
-// Load Custom Products from localStorage
+// Load Custom Products and Edited Overrides from localStorage
 const CUSTOM_PRODUCTS_KEY = 'shree_hanuman_custom_products_v1';
+const EDITED_OVERRIDES_KEY = 'shree_hanuman_edited_overrides_v1';
+
 try {
   const savedCustomProds = localStorage.getItem(CUSTOM_PRODUCTS_KEY);
   if (savedCustomProds) {
     const parsed = JSON.parse(savedCustomProds);
-    if (Array.isArray(parsed)) {
-      productsData.push(...parsed);
+    if (Array.isArray(parsed) && parsed.length > 0) {
+      // Avoid duplicate keys
+      parsed.forEach(cp => {
+        if (!productsData.some(p => p.id === cp.id)) {
+          productsData.unshift(cp);
+        }
+      });
+    }
+  }
+
+  const savedEditedOverrides = localStorage.getItem(EDITED_OVERRIDES_KEY);
+  if (savedEditedOverrides) {
+    const parsedOverrides = JSON.parse(savedEditedOverrides);
+    if (Array.isArray(parsedOverrides) && parsedOverrides.length > 0) {
+      parsedOverrides.forEach(override => {
+        const idx = productsData.findIndex(p => p.id === override.id);
+        if (idx !== -1) {
+          productsData[idx] = { ...productsData[idx], ...override };
+        }
+      });
     }
   }
 } catch (e) {
-  console.warn("Could not load custom products from localStorage", e);
+  console.warn("Could not load custom products/overrides from localStorage", e);
 }
 
-// Function to add new product dynamically
+// Function to add new product dynamically & persist to localStorage + Cloud DB
 function addNewProductToDataset(prodObj) {
   productsData.unshift(prodObj);
 
@@ -953,5 +973,11 @@ function addNewProductToDataset(prodObj) {
   } catch (e) {
     console.error("Failed to save custom product to localStorage", e);
   }
+
+  // Option 2 Cloud Sync: Push to Cloud Database for real-time worldwide access across all devices
+  if (window.CloudDB && typeof window.CloudDB.saveProduct === 'function') {
+    window.CloudDB.saveProduct(prodObj);
+  }
 }
+
 

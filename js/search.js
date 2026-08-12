@@ -40,6 +40,17 @@ document.addEventListener('DOMContentLoaded', () => {
   renderCategoryShowcases();
   renderProducts();
 
+  // Option 2 Cloud Sync: Fetch live products, sections & overrides from Cloud DB across all devices
+  if (window.CloudDB && typeof window.CloudDB.initCloudSync === 'function') {
+    window.CloudDB.initCloudSync((changed) => {
+      if (changed) {
+        updateCategoryDropdownsAndFilters();
+        renderCategoryShowcases();
+        renderProducts();
+      }
+    });
+  }
+
   // Search Input Listener
   if (searchInput) {
     searchInput.addEventListener('input', (e) => {
@@ -47,10 +58,17 @@ document.addEventListener('DOMContentLoaded', () => {
       renderProducts();
     });
   }
+  // Global header search sync helper
+  window.syncHeaderSearch = function(val) {
+    const catalogInput = document.getElementById('productSearchInput');
+    searchQuery = val.toLowerCase().trim();
+    if (catalogInput) catalogInput.value = val;
+    renderProducts();
+  };
 });
 
 /* --------------------------------------------------------------------------
-   1. HERO SECTION HOT DEALS AUTO-ROTATOR (2 SECONDS)
+   1. HERO SECTION HOT DEALS AUTO-ROTATOR (3 SECONDS)
    -------------------------------------------------------------------------- */
 function initHeroHotDealsRotator() {
   const heroContainer = document.getElementById('heroProductsGrid');
@@ -63,41 +81,43 @@ function initHeroHotDealsRotator() {
     const product = hotDeals[index % hotDeals.length];
 
     heroContainer.innerHTML = `
-      <div class="hero-slideshow-card animate-fade-in">
-        <div class="hero-slideshow-badge">${product.badge || 'Hot Deal'} • Changes in 2s</div>
+      <div class="hero-promo-header">
+        <span>Today's Featured Deal</span>
+        <span class="hero-promo-badge">${product.badge || 'Hot Deal'}</span>
+      </div>
+      <div class="hero-slideshow-card">
         <div class="hero-slideshow-img-box">
           <img src="${product.image}" alt="${product.name}" class="hero-slideshow-img">
         </div>
         <div class="hero-slideshow-info">
-          <span class="hero-card-brand">${product.brand}</span>
+          <span class="product-brand">${product.brand}</span>
           <h4 class="hero-slideshow-title">${product.name}</h4>
           <div class="hero-slideshow-weight">${product.weight}</div>
           <div class="hero-slideshow-price-row">
-            <div class="hero-slideshow-price">₹${product.price.toLocaleString('en-IN')} <span>/ ${product.unit}</span></div>
-            <button type="button" class="btn btn-cart-sm btn-ripple" onclick="addToCart('${product.id}', 1)">
-              <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
-              Add to Cart
+            <div class="hero-slideshow-price">₹${product.price.toLocaleString('en-IN')} <span style="font-size:0.8rem; font-weight:500; color:var(--text-secondary);">/ ${product.unit}</span></div>
+            <button type="button" class="btn btn-primary btn-sm" onclick="addToCart('${product.id}', 1)">
+              + Add to Cart
             </button>
           </div>
         </div>
-
-        <!-- Slideshow Indicators -->
-        <div class="hero-slideshow-dots">
-          ${hotDeals.map((_, i) => `<span class="dot-sm ${i === (index % hotDeals.length) ? 'active' : ''}" onclick="setHeroSlide(${i})"></span>`).join('')}
+      </div>
+      <div class="hero-owner-mini-card">
+        <img src="images/logo.jpg" alt="Shree Hanuman Super Market" class="hero-mini-logo">
+        <div>
+          <div class="badge-text-title">Jitendra Bhanwarlal Unecha</div>
+          <div class="badge-text-sub">Owner & Manager | Call: 7083568189</div>
         </div>
       </div>
     `;
   };
 
-  // Initial Slide
   renderHeroSlide(heroSlideIndex);
 
-  // Auto transition every 2000ms (2 seconds)
   if (heroSlideTimer) clearInterval(heroSlideTimer);
   heroSlideTimer = setInterval(() => {
     heroSlideIndex = (heroSlideIndex + 1) % hotDeals.length;
     renderHeroSlide(heroSlideIndex);
-  }, 2000);
+  }, 3000);
 }
 
 function setHeroSlide(idx) {
@@ -108,25 +128,31 @@ function setHeroSlide(idx) {
     if (heroContainer) {
       const product = hotDeals[idx % hotDeals.length];
       heroContainer.innerHTML = `
-        <div class="hero-slideshow-card animate-fade-in">
-          <div class="hero-slideshow-badge">${product.badge || 'Hot Deal'} • Changes in 2s</div>
+        <div class="hero-promo-header">
+          <span>Today's Featured Deal</span>
+          <span class="hero-promo-badge">${product.badge || 'Hot Deal'}</span>
+        </div>
+        <div class="hero-slideshow-card">
           <div class="hero-slideshow-img-box">
             <img src="${product.image}" alt="${product.name}" class="hero-slideshow-img">
           </div>
           <div class="hero-slideshow-info">
-            <span class="hero-card-brand">${product.brand}</span>
+            <span class="product-brand">${product.brand}</span>
             <h4 class="hero-slideshow-title">${product.name}</h4>
             <div class="hero-slideshow-weight">${product.weight}</div>
             <div class="hero-slideshow-price-row">
-              <div class="hero-slideshow-price">₹${product.price.toLocaleString('en-IN')} <span>/ ${product.unit}</span></div>
-              <button type="button" class="btn btn-cart-sm btn-ripple" onclick="addToCart('${product.id}', 1)">
-                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
-                Add to Cart
+              <div class="hero-slideshow-price">₹${product.price.toLocaleString('en-IN')} <span style="font-size:0.8rem; font-weight:500; color:var(--text-secondary);">/ ${product.unit}</span></div>
+              <button type="button" class="btn btn-primary btn-sm" onclick="addToCart('${product.id}', 1)">
+                + Add to Cart
               </button>
             </div>
           </div>
-          <div class="hero-slideshow-dots">
-            ${hotDeals.map((_, i) => `<span class="dot-sm ${i === idx ? 'active' : ''}" onclick="setHeroSlide(${i})"></span>`).join('')}
+        </div>
+        <div class="hero-owner-mini-card">
+          <img src="images/logo.jpg" alt="Shree Hanuman Super Market" class="hero-mini-logo">
+          <div>
+            <div class="badge-text-title">Jitendra Bhanwarlal Unecha</div>
+            <div class="badge-text-sub">Owner & Manager | Call: 7083568189</div>
           </div>
         </div>
       `;
@@ -479,6 +505,9 @@ window.deleteCustomSection = function(key) {
   if (confirm(`Are you sure you want to delete the section "${sec.label}"?`)) {
     customCategories = customCategories.filter(c => c.key !== key);
     saveCustomCategories();
+    if (window.CloudDB && typeof window.CloudDB.deleteCategory === 'function') {
+      window.CloudDB.deleteCategory(key);
+    }
     updateCategoryDropdownsAndFilters();
     renderCategoryShowcases();
     renderProducts();
@@ -680,6 +709,15 @@ function compressImageFile(file, callback) {
 
 // Bind Modal Form Submissions & File Upload Listeners
 document.addEventListener('DOMContentLoaded', () => {
+  // Sync Cloud DB for all visitors worldwide on load
+  if (typeof CloudDB !== 'undefined' && CloudDB.initCloudSync) {
+    CloudDB.initCloudSync(() => {
+      updateCategoryDropdownsAndFilters();
+      renderCategoryShowcases();
+      renderProducts();
+    });
+  }
+
   // High-Res Auto-Compressed File upload listener for New Product
   const newFileInput = document.getElementById('newProdImageFile');
   newFileInput?.addEventListener('change', (e) => {
@@ -768,6 +806,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     customCategories.push(newCat);
     saveCustomCategories();
+    if (window.CloudDB && typeof window.CloudDB.saveCategory === 'function') {
+      window.CloudDB.saveCategory(newCat);
+    }
 
     updateCategoryDropdownsAndFilters();
     renderCategoryShowcases();
@@ -857,6 +898,10 @@ document.addEventListener('DOMContentLoaded', () => {
       productsData.unshift(newProdObj);
     }
 
+    if (window.CloudDB && typeof window.CloudDB.saveProduct === 'function') {
+      window.CloudDB.saveProduct(newProdObj);
+    }
+
     renderCategoryShowcases();
     renderProducts();
 
@@ -905,12 +950,21 @@ document.addEventListener('DOMContentLoaded', () => {
     productsData[prodIndex].badge = badge;
     if (image) productsData[prodIndex].image = image;
 
-    // Persist edited product in localStorage
+    // Persist edited product in localStorage & Cloud DB
     try {
       localStorage.setItem('shree_hanuman_custom_products_v1', JSON.stringify(productsData.filter(p => p.id.startsWith('prod-custom-'))));
       localStorage.setItem('shree_hanuman_edited_overrides_v1', JSON.stringify(productsData));
     } catch (err) {
       console.warn("Could not save edited product to localStorage", err);
+    }
+
+    if (window.CloudDB && typeof window.CloudDB.saveOverride === 'function') {
+      window.CloudDB.saveOverride(productsData[prodIndex]);
+    }
+
+    // Push edited price/details to Cloud Database so all visitors worldwide see update live
+    if (window.CloudDB && typeof window.CloudDB.saveOverride === 'function') {
+      window.CloudDB.saveOverride(productsData[prodIndex]);
     }
 
     renderCategoryShowcases();
