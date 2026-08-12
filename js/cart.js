@@ -264,7 +264,7 @@ function handleOrderTypeChange(val) {
   }
 }
 
-// Form Submit Handler for Order Placement via WhatsApp
+// Form Submit Handler for Order Placement via WhatsApp & Receipt Generation
 function handleCheckoutOrderSubmit(e) {
   e.preventDefault();
 
@@ -290,31 +290,42 @@ function handleCheckoutOrderSubmit(e) {
     return;
   }
 
-  // Construct itemized list
-  let itemsListText = cartState.map((item, index) => {
-    return `${index + 1}. ${item.name} (${item.weight}) - Qty: ${item.qty} ${item.unit} | Rate: ₹${item.price} | Subtotal: ₹${item.price * item.qty}`;
-  }).join('\n');
-
   const grandTotal = getCartTotal();
+  const dateStr = new Date().toLocaleString('en-IN', {
+    dateStyle: 'medium',
+    timeStyle: 'short'
+  });
+  const orderNumber = `HSM-${Date.now().toString(36).toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}`;
 
-  // WhatsApp formatted string - Professional, clean format with no extra decoration
-  let message = `New Grocery Order - Shree Hanuman Super Market\n\n`;
-  message += `Order Option: ${orderType}\n`;
-  message += `Customer Details:\n`;
-  message += `Name: ${name}\n`;
-  message += `Phone: ${phone}\n`;
-  message += `Fulfillment/Address: ${address}\n`;
-  message += `Time Slot: ${timing}\n`;
-  message += `Payment Option: ${payment}\n`;
-  if (notes) {
-    message += `Order Notes: ${notes}\n`;
-  }
-  message += `\nOrdered Items:\n`;
-  message += itemsListText;
-  message += `\n\nTotal Payable Amount: ₹${grandTotal.toLocaleString('en-IN')}\n\n`;
-  message += `Please confirm order availability and fulfillment time slot.`;
+  // Construct WhatsApp formatted Receipt String for Owner
+  let waReceipt = `===================================\n`;
+  waReceipt += `SHRI HANUMAN SUPER MARKET - TAX INVOICE\n`;
+  waReceipt += `===================================\n`;
+  waReceipt += `Invoice No: ${orderNumber}\n`;
+  waReceipt += `Date: ${dateStr}\n`;
+  waReceipt += `Fulfillment: ${orderType}\n\n`;
+  waReceipt += `CUSTOMER DETAILS:\n`;
+  waReceipt += `Name: ${name}\n`;
+  waReceipt += `Phone: ${phone}\n`;
+  waReceipt += `Fulfillment/Address: ${address}\n`;
+  waReceipt += `Slot: ${timing}\n`;
+  waReceipt += `Payment Method: ${payment}\n`;
+  if (notes) waReceipt += `Notes: ${notes}\n`;
 
-  const encodedUrl = `https://wa.me/917083568189?text=${encodeURIComponent(message)}`;
+  waReceipt += `\nITEMIZED INVOICE:\n`;
+  cartState.forEach((item, idx) => {
+    waReceipt += `${idx + 1}. ${item.name} (${item.weight}) x ${item.qty} ${item.unit} @ Rs.${item.price} = Rs.${item.price * item.qty}\n`;
+  });
+
+  waReceipt += `\n===================================\n`;
+  waReceipt += `Subtotal: Rs.${grandTotal.toLocaleString('en-IN')}\n`;
+  waReceipt += `Delivery Charge: FREE (Rs.0)\n`;
+  waReceipt += `TOTAL PAYABLE AMOUNT: Rs.${grandTotal.toLocaleString('en-IN')}\n`;
+  waReceipt += `===================================\n\n`;
+  waReceipt += `Store: Tapodham Corner, Tapodham Society, Near Jijai Garden, Warje, Pune 411058\n`;
+  waReceipt += `Proprietor: Jitendra Bhanwarlal Unecha (+91 7083568189)`;
+
+  const encodedUrl = `https://wa.me/917083568189?text=${encodeURIComponent(waReceipt)}`;
 
   // Save order header & line items directly into Supabase PostgreSQL Database
   const orderPayload = {
@@ -329,22 +340,83 @@ function handleCheckoutOrderSubmit(e) {
   };
 
   if (window.CloudDB && typeof window.CloudDB.createOrder === 'function') {
-    window.CloudDB.createOrder(orderPayload, cartState).then(res => {
-      if (res && res.orderNumber) {
-        console.log("☁️ Order recorded in Supabase:", res.orderNumber);
-      }
-    }).catch(err => console.warn("Supabase order recording warning:", err));
+    window.CloudDB.createOrder(orderPayload, cartState).catch(err => console.warn("Supabase order recording warning:", err));
   }
 
-  // Clear cart after submitting
+  // Populate Receipt Modal UI Elements
+  const receiptInvoiceNum = document.getElementById('receiptInvoiceNum');
+  const receiptDate = document.getElementById('receiptDate');
+  const receiptCustName = document.getElementById('receiptCustName');
+  const receiptCustPhone = document.getElementById('receiptCustPhone');
+  const receiptOrderType = document.getElementById('receiptOrderType');
+  const receiptCustAddress = document.getElementById('receiptCustAddress');
+  const receiptCustSlot = document.getElementById('receiptCustSlot');
+  const receiptCustPayment = document.getElementById('receiptCustPayment');
+  const receiptTableBody = document.getElementById('receiptTableBody');
+  const receiptSubtotal = document.getElementById('receiptSubtotal');
+  const receiptGrandTotal = document.getElementById('receiptGrandTotal');
+  const receiptWhatsappLink = document.getElementById('receiptWhatsappLink');
+
+  if (receiptInvoiceNum) receiptInvoiceNum.textContent = orderNumber;
+  if (receiptDate) receiptDate.textContent = dateStr;
+  if (receiptCustName) receiptCustName.textContent = name;
+  if (receiptCustPhone) receiptCustPhone.textContent = phone;
+  if (receiptOrderType) receiptOrderType.textContent = orderType;
+  if (receiptCustAddress) receiptCustAddress.textContent = address;
+  if (receiptCustSlot) receiptCustSlot.textContent = timing;
+  if (receiptCustPayment) receiptCustPayment.textContent = payment;
+  if (receiptSubtotal) receiptSubtotal.textContent = `₹${grandTotal.toLocaleString('en-IN')}`;
+  if (receiptGrandTotal) receiptGrandTotal.textContent = `₹${grandTotal.toLocaleString('en-IN')}`;
+  if (receiptWhatsappLink) receiptWhatsappLink.href = encodedUrl;
+
+  if (receiptTableBody) {
+    receiptTableBody.innerHTML = cartState.map((item, idx) => `
+      <tr style="border-bottom:1px solid var(--border-color);">
+        <td style="padding:0.45rem 0.6rem; font-weight:600; color:var(--text-secondary);">${idx + 1}</td>
+        <td style="padding:0.45rem 0.6rem;">
+          <strong style="color:var(--text-primary); font-size:0.85rem;">${item.name}</strong>
+          <div style="font-size:0.75rem; color:var(--text-secondary);">${item.brand} | ${item.weight}</div>
+        </td>
+        <td style="padding:0.45rem 0.6rem; text-align:center; font-weight:700;">${item.qty}</td>
+        <td style="padding:0.45rem 0.6rem; text-align:right;">₹${item.price.toLocaleString('en-IN')}</td>
+        <td style="padding:0.45rem 0.6rem; text-align:right; font-weight:700; color:var(--primary-color);">₹${(item.price * item.qty).toLocaleString('en-IN')}</td>
+      </tr>
+    `).join('');
+  }
+
+  // Clear cart & close checkout form
   clearCart();
   closeCheckoutModal();
 
-  // Show success toast notification
-  showToastNotification("Order saved & prepared! Opening WhatsApp to notify store owner...");
+  // Show Toast & Open Tax Invoice Receipt Modal
+  showToastNotification("🎉 Order placed! Opening bill receipt...");
+  openReceiptModal();
 
-  // Open WhatsApp in new tab
-  window.open(encodedUrl, '_blank');
+  // Auto-launch WhatsApp link in background tab to notify store owner
+  setTimeout(() => {
+    window.open(encodedUrl, '_blank');
+  }, 1000);
+}
+
+// Receipt Modal Controls & Print Function
+function openReceiptModal() {
+  const modal = document.getElementById('orderReceiptModal');
+  if (modal) {
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeReceiptModal() {
+  const modal = document.getElementById('orderReceiptModal');
+  if (modal) {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+}
+
+function printOrderReceipt() {
+  window.print();
 }
 
 // DOM Event Listeners initialization

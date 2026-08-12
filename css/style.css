@@ -1939,3 +1939,61 @@ button {
   align-items: center;
   justify-content: center;
 }
+
+/* --------------------------------------------------------------------------
+   16. Print Stylesheet for Tax Invoice / Bill Receipt Downloading & Printing
+   -------------------------------------------------------------------------- */
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+  
+  #orderReceiptModal,
+  #orderReceiptModal * {
+    visibility: visible !important;
+  }
+
+  #orderReceiptModal {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    background: #FFFFFF !important;
+    display: block !important;
+    backdrop-filter: none !important;
+    padding: 0 !important;
+  }
+
+  .checkout-modal-card {
+    max-width: 100% !important;
+    width: 100% !important;
+    box-shadow: none !important;
+    border: none !important;
+    max-height: none !important;
+    overflow: visible !important;
+    margin: 0 !important;
+  }
+
+  .checkout-modal-header,
+  .no-print,
+  .checkout-modal-close,
+  .floating-actions-column,
+  .header,
+  .footer,
+  .admin-action-bar,
+  .top-utility-bar {
+    display: none !important;
+  }
+
+  .printable-receipt-card {
+    padding: 0 !important;
+    border: none !important;
+    width: 100% !important;
+  }
+
+  @page {
+    size: auto;
+    margin: 10mm;
+  }
+}

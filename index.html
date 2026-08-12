@@ -933,6 +933,112 @@
     </div>
   </div>
 
+  <!-- MODAL: PROFESSIONAL ORDER RECEIPT & TAX INVOICE -->
+  <div class="checkout-modal-backdrop" id="orderReceiptModal">
+    <div class="checkout-modal-card compact-fit-modal" style="max-width:620px; max-height:92vh; overflow-y:auto;">
+      <div class="checkout-modal-header" style="background:var(--primary-color); color:#FFFFFF;">
+        <div>
+          <h3 style="color:#FFFFFF;">🎉 Order Placed Successfully!</h3>
+          <p style="color:rgba(255,255,255,0.9);">Your grocery bill receipt has been generated below.</p>
+        </div>
+        <button type="button" class="checkout-modal-close" style="color:#FFFFFF;" onclick="closeReceiptModal()">&times;</button>
+      </div>
+
+      <div class="checkout-modal-body" id="receiptPrintArea">
+        <!-- Printable Invoice Container -->
+        <div class="printable-receipt-card" id="printableReceiptCard">
+          <div class="receipt-header-branding">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; margin-bottom:0.75rem;">
+              <div style="display:flex; align-items:center; gap:0.6rem;">
+                <img src="images/logo.jpg" alt="Logo" style="width:48px; height:48px; border-radius:50%; object-fit:cover; border:2px solid var(--primary-color);">
+                <div>
+                  <h2 style="font-family:var(--font-heading); font-size:1.15rem; font-weight:800; color:var(--text-primary); margin:0;">Shri Hanuman Super Market</h2>
+                  <div style="font-size:0.76rem; color:var(--text-secondary);">Warje Tapodham Corner, Pune - 411058</div>
+                </div>
+              </div>
+              <div style="text-align:right;" class="receipt-meta-right">
+                <span class="badge" style="background:#FFF5ED; border-color:#FED7AA; color:var(--primary-color); font-size:0.72rem; margin:0;">TAX INVOICE / RECEIPT</span>
+                <div style="font-size:0.8rem; font-weight:700; color:var(--text-primary); margin-top:0.25rem;" id="receiptInvoiceNum">HSM-2026-0001</div>
+                <div style="font-size:0.72rem; color:var(--text-secondary);" id="receiptDate">12 Aug 2026, 10:45 PM</div>
+              </div>
+            </div>
+            <div style="font-size:0.78rem; color:var(--text-secondary); padding:0.5rem 0.75rem; background:#FFF8F3; border-radius:6px; border:1px solid #FFEEDD; margin-bottom:1rem;">
+              <strong>Owner:</strong> Jitendra Bhanwarlal Unecha | <strong>Phone/WA:</strong> +91 70835 68189 | <strong>Address:</strong> Tapodham Corner, Near Jijai Garden, Warje, Pune
+            </div>
+          </div>
+
+          <!-- Customer & Order Information Box -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1rem; font-size:0.82rem;" class="receipt-info-grid">
+            <div style="background:#FAFAF9; padding:0.65rem; border-radius:6px; border:1px solid var(--border-color);">
+              <div style="font-weight:700; color:var(--primary-color); margin-bottom:0.25rem; font-size:0.8rem;">CUSTOMER DETAILS</div>
+              <div>Name: <strong id="receiptCustName">Customer</strong></div>
+              <div>Phone: <span id="receiptCustPhone">9876543210</span></div>
+              <div>Option: <strong id="receiptOrderType">Home Delivery</strong></div>
+            </div>
+
+            <div style="background:#FAFAF9; padding:0.65rem; border-radius:6px; border:1px solid var(--border-color);">
+              <div style="font-weight:700; color:var(--primary-color); margin-bottom:0.25rem; font-size:0.8rem;">DELIVERY &amp; PAYMENT</div>
+              <div>Address: <span id="receiptCustAddress">Warje, Pune</span></div>
+              <div>Slot: <span id="receiptCustSlot">Morning Slot</span></div>
+              <div>Payment: <span id="receiptCustPayment">COD</span></div>
+            </div>
+          </div>
+
+          <!-- Itemized Invoice Table -->
+          <div style="margin-bottom:1rem; overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:0.82rem; text-align:left;">
+              <thead>
+                <tr style="background:var(--primary-color); color:#FFFFFF; font-weight:700;">
+                  <th style="padding:0.45rem 0.6rem; border-radius:4px 0 0 4px;">#</th>
+                  <th style="padding:0.45rem 0.6rem;">Item Description</th>
+                  <th style="padding:0.45rem 0.6rem; text-align:center;">Qty</th>
+                  <th style="padding:0.45rem 0.6rem; text-align:right;">Rate</th>
+                  <th style="padding:0.45rem 0.6rem; text-align:right; border-radius:0 4px 4px 0;">Amount</th>
+                </tr>
+              </thead>
+              <tbody id="receiptTableBody">
+                <!-- Dynamic line items -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Totals Summary Box -->
+          <div style="background:#FFF5ED; border:1px solid #FED7AA; border-radius:8px; padding:0.75rem; margin-bottom:1rem;">
+            <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:0.25rem;">
+              <span>Items Subtotal:</span>
+              <strong id="receiptSubtotal">₹0</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:0.25rem;">
+              <span>Delivery Charge (Warje Area):</span>
+              <strong style="color:var(--success);">FREE</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:1.05rem; font-weight:800; color:var(--primary-color); border-top:1px solid #FED7AA; padding-top:0.4rem; margin-top:0.25rem;">
+              <span>Grand Total Payable:</span>
+              <span id="receiptGrandTotal">₹0</span>
+            </div>
+          </div>
+
+          <!-- Receipt Footer Note -->
+          <div style="text-align:center; font-size:0.75rem; color:var(--text-secondary); border-top:1px dashed var(--border-color); padding-top:0.6rem;">
+            🙏 Thank you for shopping with <strong>Shri Hanuman Super Market</strong>! <br>
+            For any changes or queries, please contact Jitendra Unecha at <strong>+91 70835 68189</strong>.
+          </div>
+        </div>
+
+        <!-- Receipt Modal Actions -->
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:1.15rem;" class="no-print">
+          <button type="button" class="btn btn-primary btn-sm" style="flex:1;" onclick="printOrderReceipt()">
+            📥 Download / Print Bill Receipt
+          </button>
+          <a href="#" id="receiptWhatsappLink" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm" style="flex:1;">
+            💬 Send Receipt on WhatsApp
+          </a>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="closeReceiptModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- FLOATING ACTIONS COLUMN -->
   <div class="floating-actions-column" id="floatingActionsColumn">
     <button type="button" class="float-col-btn float-cart-col" onclick="openCartDrawer()" aria-label="Cart" title="Shopping Cart">
