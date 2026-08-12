@@ -1185,51 +1185,52 @@
 
   <!-- MODAL: ADD PRODUCT -->
   <div class="checkout-modal-backdrop" id="addProductModal">
-    <div class="checkout-modal-card compact-fit-modal" style="max-width:520px;">
+    <div class="checkout-modal-card compact-fit-modal" style="max-width:540px;">
       <div class="checkout-modal-header">
         <div>
           <h3>Add New Store Product</h3>
-          <p>Fill out details to publish product directly to store sections.</p>
         </div>
         <button type="button" class="checkout-modal-close" onclick="closeAddProductModal()">&times;</button>
       </div>
       <div class="checkout-modal-body">
         <form id="addNewProductForm" class="compact-form">
-          <div class="form-group-compact">
-            <label class="form-label-sm" for="newProdCategory">Store Category *</label>
-            <select id="newProdCategory" class="form-select-sm" required>
-              <option value="sugar_tea">Sugar, Tea, Wheat &amp; Rice</option>
-              <option value="vegetables">Fresh Vegetables &amp; Fruits</option>
-              <option value="wafers_snacks">Wafers, Biscuits &amp; Snacks</option>
-              <option value="oil">Cooking Oil &amp; Ghee</option>
-              <option value="pulses">Pulses &amp; Dal</option>
-              <option value="spices">Spices &amp; Masala</option>
-              <option value="dryfruits">Dry Fruits &amp; Nuts</option>
-              <option value="cleaning">Cleaning &amp; Personal Care</option>
-              <option value="best_value">Best Value Mega Deals</option>
-            </select>
-          </div>
           <div class="form-row-grid">
             <div class="form-group-compact">
-              <label class="form-label-sm" for="newProdName">Product Title *</label>
-              <input type="text" id="newProdName" class="form-input-sm" placeholder="e.g. Organic Brown Rice" required>
+              <label class="form-label-sm" for="newProdCategory">Store Category *</label>
+              <select id="newProdCategory" class="form-select-sm" required>
+                <option value="sugar_tea">Sugar, Tea, Wheat &amp; Rice</option>
+                <option value="vegetables">Fresh Vegetables &amp; Fruits</option>
+                <option value="wafers_snacks">Wafers, Biscuits &amp; Snacks</option>
+                <option value="oil">Cooking Oil &amp; Ghee</option>
+                <option value="pulses">Pulses &amp; Dal</option>
+                <option value="spices">Spices &amp; Masala</option>
+                <option value="dryfruits">Dry Fruits &amp; Nuts</option>
+                <option value="cleaning">Cleaning &amp; Personal Care</option>
+                <option value="best_value">Best Value Mega Deals</option>
+              </select>
             </div>
+            <div class="form-group-compact">
+              <label class="form-label-sm" for="newProdName">Product Title *</label>
+              <input type="text" id="newProdName" class="form-input-sm" placeholder="e.g. Organic Rice" required>
+            </div>
+          </div>
+
+          <div class="form-row-grid">
             <div class="form-group-compact">
               <label class="form-label-sm" for="newProdBrand">Brand Name *</label>
               <input type="text" id="newProdBrand" class="form-input-sm" placeholder="e.g. Farm Select" required>
             </div>
-          </div>
-          <div class="form-row-grid">
             <div class="form-group-compact">
               <label class="form-label-sm" for="newProdWeight">Weight / Pack Size *</label>
               <input type="text" id="newProdWeight" class="form-input-sm" placeholder="e.g. 5kg Bag" required>
             </div>
+          </div>
+
+          <div class="form-row-grid">
             <div class="form-group-compact">
               <label class="form-label-sm" for="newProdPrice">Price (₹) *</label>
               <input type="number" id="newProdPrice" class="form-input-sm" placeholder="e.g. 350" min="1" required>
             </div>
-          </div>
-          <div class="form-row-grid">
             <div class="form-group-compact">
               <label class="form-label-sm" for="newProdUnit">Unit Type *</label>
               <select id="newProdUnit" class="form-select-sm" required>
@@ -1241,6 +1242,9 @@
                 <option value="box">box</option>
               </select>
             </div>
+          </div>
+
+          <div class="form-row-grid">
             <div class="form-group-compact">
               <label class="form-label-sm" for="newProdBadge">Tag / Badge</label>
               <select id="newProdBadge" class="form-select-sm">
@@ -1250,13 +1254,13 @@
                 <option value="Best Seller">Best Seller</option>
               </select>
             </div>
+            <div class="form-group-compact">
+              <label class="form-label-sm" for="newProdImage">Image URL or File</label>
+              <input type="text" id="newProdImage" class="form-input-sm" placeholder="images/item.png or https://...">
+            </div>
           </div>
-          <div class="form-group-compact">
-            <label class="form-label-sm">Product Image (Choose File or Enter URL)</label>
-            <input type="file" id="newProdImageFile" accept="image/*" class="form-input-sm">
-            <input type="url" id="newProdImage" class="form-input-sm" placeholder="Paste image URL (https://...) or leave blank" style="margin-top:0.3rem;">
-          </div>
-          <div style="display:flex; gap:0.5rem; justify-content:flex-end; margin-top:1rem;">
+
+          <div style="display:flex; gap:0.5rem; justify-content:flex-end; margin-top:0.4rem;">
             <button type="button" class="btn btn-secondary btn-sm" onclick="closeAddProductModal()">Cancel</button>
             <button type="submit" class="btn btn-primary btn-sm">+ Publish Product</button>
           </div>
@@ -1267,52 +1271,53 @@
 
   <!-- MODAL: EDIT PRODUCT -->
   <div class="checkout-modal-backdrop" id="editProductModal">
-    <div class="checkout-modal-card compact-fit-modal" style="max-width:520px;">
+    <div class="checkout-modal-card compact-fit-modal" style="max-width:540px;">
       <div class="checkout-modal-header">
         <div>
           <h3>Edit Store Product</h3>
-          <p>Modify details for selected product.</p>
         </div>
         <button type="button" class="checkout-modal-close" onclick="closeEditProductModal()">&times;</button>
       </div>
       <div class="checkout-modal-body">
         <form id="editProductForm" class="compact-form">
           <input type="hidden" id="editProdId">
-          <div class="form-group-compact">
-            <label class="form-label-sm" for="editProdCategory">Store Category *</label>
-            <select id="editProdCategory" class="form-select-sm" required>
-              <option value="sugar_tea">Sugar, Tea, Wheat &amp; Rice</option>
-              <option value="vegetables">Fresh Vegetables &amp; Fruits</option>
-              <option value="wafers_snacks">Wafers, Biscuits &amp; Snacks</option>
-              <option value="oil">Cooking Oil &amp; Ghee</option>
-              <option value="pulses">Pulses &amp; Dal</option>
-              <option value="spices">Spices &amp; Masala</option>
-              <option value="dryfruits">Dry Fruits &amp; Nuts</option>
-              <option value="cleaning">Cleaning &amp; Personal Care</option>
-              <option value="best_value">Best Value Mega Deals</option>
-            </select>
-          </div>
           <div class="form-row-grid">
+            <div class="form-group-compact">
+              <label class="form-label-sm" for="editProdCategory">Store Category *</label>
+              <select id="editProdCategory" class="form-select-sm" required>
+                <option value="sugar_tea">Sugar, Tea, Wheat &amp; Rice</option>
+                <option value="vegetables">Fresh Vegetables &amp; Fruits</option>
+                <option value="wafers_snacks">Wafers, Biscuits &amp; Snacks</option>
+                <option value="oil">Cooking Oil &amp; Ghee</option>
+                <option value="pulses">Pulses &amp; Dal</option>
+                <option value="spices">Spices &amp; Masala</option>
+                <option value="dryfruits">Dry Fruits &amp; Nuts</option>
+                <option value="cleaning">Cleaning &amp; Personal Care</option>
+                <option value="best_value">Best Value Mega Deals</option>
+              </select>
+            </div>
             <div class="form-group-compact">
               <label class="form-label-sm" for="editProdName">Product Title *</label>
               <input type="text" id="editProdName" class="form-input-sm" required>
             </div>
+          </div>
+
+          <div class="form-row-grid">
             <div class="form-group-compact">
               <label class="form-label-sm" for="editProdBrand">Brand Name *</label>
               <input type="text" id="editProdBrand" class="form-input-sm" required>
             </div>
-          </div>
-          <div class="form-row-grid">
             <div class="form-group-compact">
               <label class="form-label-sm" for="editProdWeight">Weight / Pack Size *</label>
               <input type="text" id="editProdWeight" class="form-input-sm" required>
             </div>
+          </div>
+
+          <div class="form-row-grid">
             <div class="form-group-compact">
               <label class="form-label-sm" for="editProdPrice">Price (₹) *</label>
               <input type="number" id="editProdPrice" class="form-input-sm" min="1" required>
             </div>
-          </div>
-          <div class="form-row-grid">
             <div class="form-group-compact">
               <label class="form-label-sm" for="editProdUnit">Unit Type *</label>
               <select id="editProdUnit" class="form-select-sm" required>
@@ -1324,6 +1329,9 @@
                 <option value="box">box</option>
               </select>
             </div>
+          </div>
+
+          <div class="form-row-grid">
             <div class="form-group-compact">
               <label class="form-label-sm" for="editProdBadge">Tag / Badge</label>
               <select id="editProdBadge" class="form-select-sm">
@@ -1333,13 +1341,13 @@
                 <option value="Best Seller">Best Seller</option>
               </select>
             </div>
+            <div class="form-group-compact">
+              <label class="form-label-sm" for="editProdImage">Product Image URL</label>
+              <input type="text" id="editProdImage" class="form-input-sm" placeholder="images/custom.png or https://...">
+            </div>
           </div>
-          <div class="form-group-compact">
-            <label class="form-label-sm">Product Image</label>
-            <input type="file" id="editProdImageFile" accept="image/*" class="form-input-sm">
-            <input type="text" id="editProdImage" class="form-input-sm" placeholder="images/custom.png or https://..." style="margin-top:0.3rem;">
-          </div>
-          <div style="display:flex; gap:0.5rem; justify-content:flex-end; margin-top:1rem;">
+
+          <div style="display:flex; gap:0.5rem; justify-content:flex-end; margin-top:0.4rem;">
             <button type="button" class="btn btn-secondary btn-sm" onclick="closeEditProductModal()">Cancel</button>
             <button type="submit" class="btn btn-primary btn-sm">💾 Update Product</button>
           </div>

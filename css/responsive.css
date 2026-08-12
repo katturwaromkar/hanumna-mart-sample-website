@@ -162,10 +162,10 @@
   }
 
   .form-row-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    width: 100%;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.4rem !important;
+    width: 100% !important;
   }
 
   /* Strict Mobile Grid View for Showcase & Catalog Grids (No Card Overflow) */
@@ -196,36 +196,85 @@
     display: none !important;
   }
 
-  /* Order & Form Modals Display on Mobile Screen */
+  /* Order & Form Modals Display on Mobile Screen (Fits on screen without scrollbar) */
   .cart-drawer-backdrop,
   .checkout-modal-backdrop {
-    padding: 0.5rem !important;
+    padding: 0.35rem !important;
     box-sizing: border-box !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 
   .checkout-modal-card,
   .compact-fit-modal {
-    width: 100% !important;
-    max-width: 100% !important;
-    max-height: 92vh !important;
+    width: 95% !important;
+    max-width: 520px !important;
+    max-height: 96vh !important;
     margin: 0 auto !important;
-    border-radius: var(--radius-md) !important;
+    border-radius: 10px !important;
     box-sizing: border-box !important;
+    overflow: hidden !important;
   }
 
   .checkout-modal-header {
-    padding: 0.85rem 1rem !important;
+    padding: 0.5rem 0.75rem !important;
   }
 
   .checkout-modal-header h3 {
-    font-size: 1.05rem !important;
+    font-size: 0.98rem !important;
+    margin: 0 !important;
+  }
+
+  .checkout-modal-header p {
+    display: none !important;
   }
 
   .checkout-modal-body {
-    padding: 0.85rem 1rem !important;
-    max-height: 75vh !important;
+    padding: 0.65rem 0.75rem !important;
+    max-height: 85vh !important;
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch !important;
+  }
+
+  .form-group-compact {
+    margin-bottom: 0.3rem !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .form-label-sm {
+    font-size: 0.73rem !important;
+    margin-bottom: 0.15rem !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .form-input-sm,
+  .form-select-sm {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    font-size: 0.8rem !important;
+    padding: 0.3rem 0.5rem !important;
+    height: 32px !important;
+    min-height: 32px !important;
+  }
+
+  .checkout-form-actions-sm {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: flex-end !important;
+    gap: 0.4rem !important;
+    width: 100% !important;
+    margin-top: 0.4rem !important;
+  }
+
+  .checkout-form-actions-sm .btn {
+    width: auto !important;
+    font-size: 0.8rem !important;
+    padding: 0.4rem 0.75rem !important;
+    height: 34px !important;
   }
 }
 
@@ -324,24 +373,26 @@
     font-size: 0.7rem !important;
   }
 
-  /* Form & Checkout Specific Mobile Styles */
+  /* Form & Checkout Specific Mobile Styles (Fits on screen without scrollbar) */
   .compact-order-bar {
-    flex-direction: column !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
     gap: 0.25rem !important;
-    text-align: center !important;
-    font-size: 0.82rem !important;
-    padding: 0.5rem 0.75rem !important;
+    font-size: 0.8rem !important;
+    padding: 0.4rem 0.6rem !important;
+    margin-bottom: 0.5rem !important;
   }
 
   .form-group-compact {
-    margin-bottom: 0.5rem !important;
+    margin-bottom: 0.3rem !important;
     width: 100% !important;
     box-sizing: border-box !important;
   }
 
   .form-label-sm {
-    font-size: 0.76rem !important;
-    margin-bottom: 0.2rem !important;
+    font-size: 0.73rem !important;
+    margin-bottom: 0.15rem !important;
   }
 
   .form-input-sm,
@@ -349,24 +400,28 @@
     width: 100% !important;
     max-width: 100% !important;
     box-sizing: border-box !important;
-    font-size: 0.84rem !important;
-    padding: 0.5rem 0.65rem !important;
-    min-height: 38px !important;
+    font-size: 0.8rem !important;
+    padding: 0.25rem 0.5rem !important;
+    height: 32px !important;
+    min-height: 32px !important;
   }
 
   .checkout-form-actions-sm {
-    flex-direction: column-reverse !important;
-    gap: 0.5rem !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: flex-end !important;
+    gap: 0.4rem !important;
     width: 100% !important;
-    margin-top: 0.75rem !important;
+    margin-top: 0.4rem !important;
   }
 
   .checkout-form-actions-sm .btn {
-    width: 100% !important;
+    width: auto !important;
     justify-content: center !important;
     text-align: center !important;
-    font-size: 0.85rem !important;
-    padding: 0.6rem 0.75rem !important;
+    font-size: 0.8rem !important;
+    padding: 0.4rem 0.75rem !important;
+    height: 34px !important;
   }
 
   .floating-actions-column {
