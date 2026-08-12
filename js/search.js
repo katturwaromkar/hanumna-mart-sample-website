@@ -1,7 +1,7 @@
 /* ==========================================================================
    SHREE HANUMAN SUPER MARKET - Live Product Search & Category Showcase Engine
    Includes 2-second Auto-rotating Hero Hot Deals Showcase and Arrow Navigation
-   Owner: Jitendra Bhanwarlal Unecha | Contact: 7083568189
+   Owner: Jitendra Bhawarlal unecha | Contact: 7083568189
    ========================================================================== */
 
 let activeCategory = 'all';
@@ -112,7 +112,7 @@ function initHeroHotDealsRotator() {
       <div class="hero-owner-mini-card">
         <img src="images/logo.jpg" alt="Shree Hanuman Super Market" class="hero-mini-logo">
         <div>
-          <div class="badge-text-title">Jitendra Bhanwarlal Unecha</div>
+          <div class="badge-text-title">Jitendra Bhawarlal unecha</div>
           <div class="badge-text-sub">Owner & Manager | Call: 7083568189</div>
         </div>
       </div>
@@ -159,7 +159,7 @@ function setHeroSlide(idx) {
         <div class="hero-owner-mini-card">
           <img src="images/logo.jpg" alt="Shree Hanuman Super Market" class="hero-mini-logo">
           <div>
-            <div class="badge-text-title">Jitendra Bhanwarlal Unecha</div>
+            <div class="badge-text-title">Jitendra Bhawarlal unecha</div>
             <div class="badge-text-sub">Owner & Manager | Call: 7083568189</div>
           </div>
         </div>
@@ -279,11 +279,15 @@ function scrollTrackRight(trackId) {
 // Generate Product Card HTML (Includes Admin Edit Button when verified)
 function renderCardMarkupList(itemList, isCompact = false) {
   const addTxt = window.i18n ? window.i18n.t('addToCart') : 'Add to Cart';
+  const addedTxt = window.i18n ? window.i18n.t('addedToCart') : '✓ Added';
   const stockTxt = window.i18n ? window.i18n.t('inStock') : 'In Stock';
 
   return itemList.map(product => {
+    const displayName = window.getProductName ? window.getProductName(product) : product.name;
+    const isInCart = (typeof cartState !== 'undefined') && cartState.some(item => item.id === product.id);
+
     // Professional Clean WhatsApp Message (No decorative asterisks clutter)
-    const cleanMsg = `GROCERY ENQUIRY - SHREE HANUMAN SUPER MARKET\n\nProduct: ${product.name}\nBrand: ${product.brand}\nPack: ${product.weight}\nPrice: Rs.${product.price} / ${product.unit}\n\nPlease confirm stock availability.`;
+    const cleanMsg = `GROCERY ENQUIRY - SHREE HANUMAN SUPER MARKET\n\nProduct: ${displayName}\nBrand: ${product.brand}\nPack: ${product.weight}\nPrice: Rs.${product.price} / ${product.unit}\n\nPlease confirm stock availability.`;
     const whatsappUrl = `https://wa.me/917083568189?text=${encodeURIComponent(cleanMsg)}`;
 
     return `
@@ -297,11 +301,11 @@ function renderCardMarkupList(itemList, isCompact = false) {
         ` : ''}
 
         <div class="product-img-box">
-          <img src="${product.image}" alt="${product.name}" loading="lazy">
+          <img src="${product.image}" alt="${displayName}" loading="lazy" onerror="this.onerror=null; this.src='images/logo.jpg';">
         </div>
         <div class="product-details">
           <span class="product-brand">${product.brand}</span>
-          <h3 class="product-name">${product.name}</h3>
+          <h3 class="product-name">${displayName}</h3>
           <p class="product-weight">${product.weight}</p>
           
           <div class="product-price-row">
@@ -319,11 +323,18 @@ function renderCardMarkupList(itemList, isCompact = false) {
               <button type="button" class="card-qty-btn" onclick="increaseCardQty('${product.id}')">+</button>
             </div>
 
-            <button type="button" class="btn btn-cart btn-ripple" onclick="triggerAddToCart('${product.id}')">
-              <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/>
-              </svg>
-              ${addTxt}
+            <button type="button" class="btn btn-cart ${isInCart ? 'btn-cart-added' : 'btn-ripple'}" onclick="triggerAddToCart('${product.id}')">
+              ${isInCart ? `
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                </svg>
+                ${addedTxt}
+              ` : `
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/>
+                </svg>
+                ${addTxt}
+              `}
             </button>
           </div>
 
@@ -390,6 +401,22 @@ function triggerAddToCart(id) {
   const input = document.getElementById(`cardQty_${id}`);
   const qty = input ? (parseInt(input.value, 10) || 1) : 1;
   addToCart(id, qty);
+
+  // Update button appearance live to vibrant green with checkmark icon
+  const addedTxt = window.i18n ? window.i18n.t('addedToCart') : '✓ Added';
+  const cards = document.querySelectorAll(`.product-card[data-id="${id}"]`);
+  cards.forEach(card => {
+    const btn = card.querySelector('.btn-cart');
+    if (btn) {
+      btn.classList.add('btn-cart-added');
+      btn.innerHTML = `
+        <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+        </svg>
+        ${addedTxt}
+      `;
+    }
+  });
 }
 
 /* --------------------------------------------------------------------------
@@ -967,4 +994,41 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+/* --------------------------------------------------------------------------
+   VERNACULAR VOICE SEARCH ASSISTANT (Web Speech API)
+   -------------------------------------------------------------------------- */
+window.startVoiceSearch = function(targetInputId = 'productSearchInput') {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    alert("Voice Search is supported on Google Chrome, Microsoft Edge, and Android Browsers.");
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+  const lang = window.i18n ? window.i18n.getCurrentLang() : 'en';
+  recognition.lang = (lang === 'mr') ? 'mr-IN' : ((lang === 'hi') ? 'hi-IN' : ((lang === 'gu') ? 'gu-IN' : 'en-IN'));
+  recognition.continuous = false;
+  recognition.interimResults = false;
+
+  if (typeof showToastNotification === 'function') {
+    showToastNotification("🎙️ Listening... Speak product name now.");
+  }
+
+  recognition.onresult = function(event) {
+    const transcript = event.results[0][0].transcript;
+    if (transcript) {
+      if (typeof showToastNotification === 'function') {
+        showToastNotification(`🎙️ Searching for: "${transcript}"`);
+      }
+      syncHeaderSearch(transcript);
+    }
+  };
+
+  recognition.onerror = function(event) {
+    console.warn("Voice Recognition error:", event.error);
+  };
+
+  recognition.start();
+};
 

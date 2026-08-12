@@ -388,21 +388,22 @@ window.CloudDB = {
       const headers = this.getHeaders('return=representation');
 
       const orderNumber = `HSM-${Date.now().toString(36).toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}`;
+      const esc = (window.SecurityEngine && window.SecurityEngine.escapeHTML) ? window.SecurityEngine.escapeHTML : (s => String(s || ''));
 
       const orderPayload = {
-        order_number: orderNumber,
-        customer_name: orderData.name,
-        customer_phone: orderData.phone,
-        fulfillment_type: orderData.orderType || 'Home Delivery',
-        delivery_address: orderData.address || '',
-        time_slot: orderData.timing || '',
-        payment_method: orderData.payment || 'Cash on Delivery (COD)',
+        order_number: esc(orderNumber),
+        customer_name: esc(orderData.name),
+        customer_phone: esc(orderData.phone),
+        fulfillment_type: esc(orderData.orderType || 'Home Delivery'),
+        delivery_address: esc(orderData.address || ''),
+        time_slot: esc(orderData.timing || ''),
+        payment_method: esc(orderData.payment || 'Cash on Delivery (COD)'),
         payment_status: 'Pending',
         order_status: 'Pending',
-        subtotal: orderData.grandTotal,
+        subtotal: Number(orderData.grandTotal) || 0,
         delivery_charge: 0,
-        grand_total: orderData.grandTotal,
-        notes: orderData.notes || ''
+        grand_total: Number(orderData.grandTotal) || 0,
+        notes: esc(orderData.notes || '')
       };
 
       // A. Insert Order Header

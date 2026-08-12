@@ -1,0 +1,22 @@
+{
+  "name": "Shri Hanuman Super Market Warje",
+  "short_name": "Hanuman Mart",
+  "description": "Everyday Supermarket & Grocery Store in Warje, Pune. Managed by Jitendra Bhanwarlal Unecha.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFF8F3",
+  "theme_color": "#EA580C",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "images/logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "images/logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}

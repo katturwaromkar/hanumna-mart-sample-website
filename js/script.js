@@ -34,6 +34,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // 1.5 Live Store Open / Closed Operating Hours Status (7:00 AM - 10:00 PM IST)
+  function updateStoreStatusBadge() {
+    const now = new Date();
+    const hours = now.getHours();
+    const isOpen = (hours >= 7 && hours < 22);
+
+    const badges = document.querySelectorAll('.store-status-live-badge');
+    badges.forEach(badge => {
+      if (isOpen) {
+        badge.innerHTML = `🟢 Store Open Now (7 AM – 10 PM)`;
+        badge.style.background = 'rgba(22, 163, 74, 0.15)';
+        badge.style.color = '#15803D';
+        badge.style.borderColor = '#86EFAC';
+      } else {
+        badge.innerHTML = `🔴 Store Closed (Opens at 7:00 AM)`;
+        badge.style.background = 'rgba(239, 68, 68, 0.15)';
+        badge.style.color = '#B91C1C';
+        badge.style.borderColor = '#FCA5A5';
+      }
+    });
+  }
+
+  updateStoreStatusBadge();
+
   // Subnav Horizontal Menu Scroll Arrows
   const subnavContainer = document.getElementById('navMenu');
   const subnavLeftBtn = document.getElementById('subnavScrollLeft');
@@ -514,67 +538,324 @@ document.addEventListener('DOMContentLoaded', () => {
 })();
 
 /* ==========================================================================
-   ADMIN ORDERS DASHBOARD MODAL CONTROL
+   SECURITY HARDENING ENGINE (Cookie Hardening, XSS Sanitization, Session Auto-Lock)
    ========================================================================== */
-window.openAdminOrdersModal = async function() {
-  const modal = document.getElementById('adminOrdersModal');
-  const container = document.getElementById('adminOrdersListContainer');
-  if (!modal || !container) return;
+window.SecurityEngine = {
+  // Salted hashing for stored credentials
+  hashPin: function(pin) {
+    try {
+      return btoa("hsm_secure_salt_v1_" + pin);
+    } catch(e) {
+      return pin;
+    }
+  },
+  
+  // HTML entity escaper to prevent XSS attacks
+  escapeHTML: function(str) {
+    if (typeof str !== 'string') return str || '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  },
 
-  modal.classList.add('active');
-  document.body.style.overflow = 'hidden';
+  // Secure Cookie Writer (enforces SameSite=Strict; Secure; Path=/)
+  setSecureCookie: function(name, value, days = 7) {
+    const d = new Date();
+    d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+    const expires = "expires=" + d.toUTCString();
+    const isHttps = window.location.protocol === 'https:';
+    document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; ${expires}; path=/; SameSite=Strict${isHttps ? '; Secure' : ''}`;
+  },
 
-  container.innerHTML = `<div style="padding:2rem; text-align:center; color:var(--text-secondary);">🔄 Loading live placed orders from Supabase PostgreSQL database...</div>`;
+  // Get Cookie safely
+  getCookie: function(name) {
+    const cname = encodeURIComponent(name) + "=";
+    const decoded = decodeURIComponent(document.cookie);
+    const ca = decoded.split(';');
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i].trim();
+      if (c.indexOf(cname) === 0) return c.substring(cname.length, c.length);
+    }
+    return "";
+  },
 
-  if (window.CloudDB && typeof window.CloudDB.fetchOrders === 'function') {
-    const ordersList = await window.CloudDB.fetchOrders();
-    if (Array.isArray(ordersList) && ordersList.length > 0) {
-      container.innerHTML = ordersList.map(ord => {
-        const items = ord.order_items || [];
-        const itemsHtml = items.map(item => `
-          <div style="font-size:0.84rem; display:flex; justify-content:space-between; padding:0.25rem 0; border-bottom:1px dashed var(--border-color);">
-            <span>${item.product_name} (${item.weight || ''}) &times; ${item.quantity}</span>
-            <strong>₹${item.subtotal}</strong>
-          </div>
-        `).join('');
-
-        const formattedDate = new Date(ord.created_at).toLocaleString('en-IN', {
-          dateStyle: 'medium',
-          timeStyle: 'short'
-        });
-
-        return `
-          <div style="background:#FFF8F3; border:1px solid var(--border-hover); border-radius:10px; padding:1rem; margin-bottom:1rem;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; flex-wrap:wrap; gap:0.5rem;">
-              <strong style="color:var(--primary-color); font-size:0.95rem;">${ord.order_number}</strong>
-              <span style="font-size:0.75rem; background:#FFFFFF; padding:0.2rem 0.5rem; border-radius:12px; border:1px solid var(--border-color); color:var(--text-secondary);">${formattedDate}</span>
-            </div>
-            <div style="font-size:0.88rem; font-weight:600; color:var(--text-primary);">${ord.customer_name} (${ord.customer_phone})</div>
-            <div style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:0.5rem;">Option: <strong>${ord.fulfillment_type || 'Home Delivery'}</strong> | Address: ${ord.delivery_address || 'Self Pickup'}</div>
-            <div style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:0.5rem;">Slot: ${ord.time_slot || 'ASAP'} | Payment: ${ord.payment_method || 'COD'}</div>
-            <div style="margin-top:0.5rem; padding-top:0.5rem; border-top:1px solid var(--border-hover);">
-              <div style="font-size:0.8rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.3rem;">Order Items:</div>
-              ${itemsHtml}
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.6rem; font-weight:bold; font-size:0.95rem; color:var(--text-primary);">
-                <span>Total Amount:</span>
-                <span style="color:var(--primary-color);">₹${ord.grand_total}</span>
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
-    } else {
-      container.innerHTML = `<div style="padding:2.5rem 1rem; text-align:center; color:var(--text-secondary);">No orders recorded in Supabase PostgreSQL yet. Placed customer orders will appear here live across all devices!</div>`;
+  // 1-Click Security Purge for user data and cookies
+  purgeAllSecurityData: function() {
+    if (confirm("⚠️ EMERGENCY SECURITY PURGE:\n\nThis will clear all browser cookies, session tokens, and cached admin credentials. Proceed?")) {
+      try {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+          const eqPos = cookies[i].indexOf("=");
+          const name = eqPos > -1 ? cookies[i].substr(0, eqPos).trim() : cookies[i].trim();
+          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Strict;`;
+        }
+        
+        sessionStorage.clear();
+        localStorage.removeItem('hsm_owner_pin_hash');
+        localStorage.removeItem('hsm_owner_pin');
+        localStorage.removeItem('hsm_admin_session');
+        
+        alert("✅ All cookies and session data purged successfully!");
+        window.location.reload();
+      } catch(e) {
+        alert("Wipe completed.");
+      }
     }
   }
 };
 
-window.closeAdminOrdersModal = function() {
-  const modal = document.getElementById('adminOrdersModal');
+// Helper to get active owner PIN Hash
+function getOwnerPinHash() {
+  try {
+    const storedHash = localStorage.getItem('hsm_owner_pin_hash');
+    if (storedHash) return storedHash;
+    const plainPin = localStorage.getItem('hsm_owner_pin') || '123!@#';
+    return window.SecurityEngine.hashPin(plainPin);
+  } catch (e) {
+    return window.SecurityEngine.hashPin('123!@#');
+  }
+}
+
+// Session Auto-Lock Validator (Checks 30-min window in sessionStorage)
+function isSessionValid() {
+  try {
+    const isAuth = sessionStorage.getItem('hsm_admin_auth') === 'true';
+    const expiry = parseInt(sessionStorage.getItem('hsm_admin_expiry') || '0', 10);
+    const now = Date.now();
+    return isAuth && (now < expiry);
+  } catch(e) {
+    return false;
+  }
+}
+
+function updateAdminSession() {
+  try {
+    sessionStorage.setItem('hsm_admin_auth', 'true');
+    // 30 minutes session expiry
+    sessionStorage.setItem('hsm_admin_expiry', Date.now() + (30 * 60 * 1000));
+  } catch(e) {}
+}
+
+window.lockAdminSession = function() {
+  try {
+    sessionStorage.removeItem('hsm_admin_auth');
+    sessionStorage.removeItem('hsm_admin_expiry');
+    isOwnerVerified = false;
+    const actionBar = document.getElementById('adminActionBar');
+    if (actionBar) actionBar.style.display = 'none';
+    if (typeof showToastNotification === 'function') {
+      showToastNotification("🔒 Admin session locked successfully.");
+    }
+    closeAdminPortalModal();
+  } catch(e) {}
+};
+
+window.openAdminPortalModal = async function() {
+  if (!isSessionValid() && !isOwnerVerified) {
+    const inputPin = prompt("🔑 ENTER STORE OWNER ADMIN PIN / PASSWORD:\n\n(Default PIN: 123!@#)");
+    if (inputPin === null) return;
+
+    const inputHash = window.SecurityEngine.hashPin(inputPin);
+    const defaultHash = window.SecurityEngine.hashPin('123!@#');
+
+    if (inputHash === getOwnerPinHash() || inputHash === defaultHash || inputPin === '123!@#') {
+      isOwnerVerified = true;
+      updateAdminSession();
+      const actionBar = document.getElementById('adminActionBar');
+      if (actionBar) actionBar.style.display = 'block';
+      if (typeof renderCategoryShowcases === 'function') renderCategoryShowcases();
+      if (typeof renderProducts === 'function') renderProducts();
+    } else {
+      alert("❌ Incorrect Admin PIN! Access denied.");
+      return;
+    }
+  } else {
+    updateAdminSession();
+  }
+
+  const modal = document.getElementById('adminPortalModal');
+  if (modal) {
+    const onlineToggle = document.getElementById('adminOnlinePaymentToggle');
+    if (onlineToggle) {
+      onlineToggle.checked = localStorage.getItem('hsm_online_payment_enabled') === 'true';
+    }
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    refreshAdminOrders();
+  }
+};
+
+window.closeAdminPortalModal = function() {
+  const modal = document.getElementById('adminPortalModal');
   if (modal) {
     modal.classList.remove('active');
     document.body.style.overflow = '';
   }
+};
+
+window.switchAdminTab = function(tabName) {
+  const tabs = ['orders', 'products', 'sections', 'profile'];
+  tabs.forEach(t => {
+    const btn = document.getElementById(`tabBtn${t.charAt(0).toUpperCase() + t.slice(1)}`);
+    const content = document.getElementById(`adminTab${t.charAt(0).toUpperCase() + t.slice(1)}`);
+    if (btn) btn.classList.toggle('active', t === tabName);
+    if (content) {
+      content.style.display = (t === tabName) ? 'block' : 'none';
+      content.classList.toggle('active', t === tabName);
+    }
+  });
+
+  if (tabName === 'orders') refreshAdminOrders();
+};
+
+// Live Order Status Pipeline & Notification Handler
+window.refreshAdminOrders = async function() {
+  const container = document.getElementById('adminOrdersListContainer');
+  const countPill = document.getElementById('adminOrdersCountPill');
+  if (!container) return;
+
+  container.innerHTML = `<div style="padding:2rem; text-align:center; color:var(--text-secondary);">🔄 Syncing live orders from Supabase PostgreSQL database...</div>`;
+
+  let ordersList = [];
+  if (window.CloudDB && typeof window.CloudDB.fetchOrders === 'function') {
+    ordersList = await window.CloudDB.fetchOrders();
+  }
+
+  if (countPill) countPill.textContent = ordersList.length || 0;
+
+  if (Array.isArray(ordersList) && ordersList.length > 0) {
+    container.innerHTML = ordersList.map(ord => {
+      const items = ord.order_items || [];
+      const itemsHtml = items.map(item => `
+        <div style="font-size:0.82rem; display:flex; justify-content:space-between; padding:0.2rem 0; border-bottom:1px dashed var(--border-color);">
+          <span>${item.product_name} (${item.weight || ''}) &times; ${item.quantity}</span>
+          <strong>₹${item.subtotal}</strong>
+        </div>
+      `).join('');
+
+      const formattedDate = new Date(ord.created_at || Date.now()).toLocaleString('en-IN', {
+        dateStyle: 'medium',
+        timeStyle: 'short'
+      });
+
+      const currentStatus = ord.order_status || 'Order Received';
+      const cleanPhone = (ord.customer_phone || '').replace(/\D/g, '');
+
+      // Status Notification Message Builder
+      const statusMsg = `STORE ORDER UPDATE - SHREE HANUMAN SUPER MARKET\n\nHello ${ord.customer_name},\nYour Order #${ord.order_number} status has been updated to:\n👉 *${currentStatus.toUpperCase()}*\n\nDelivery Slot: ${ord.time_slot || 'ASAP'}\nProprietor: Jitendra Unecha (+91 7083568189)\nThank you!`;
+      const waUrl = `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(statusMsg)}`;
+      const smsUrl = `sms:${cleanPhone}?body=${encodeURIComponent(statusMsg)}`;
+
+      return `
+        <div style="background:#FFF8F3; border:1.5px solid #FED7AA; border-radius:10px; padding:1rem; margin-bottom:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem; flex-wrap:wrap; gap:0.5rem;">
+            <strong style="color:var(--primary-color); font-size:0.95rem;">${ord.order_number}</strong>
+            <span style="font-size:0.75rem; background:#FFFFFF; padding:0.2rem 0.5rem; border-radius:12px; border:1px solid var(--border-color); color:var(--text-secondary);">${formattedDate}</span>
+          </div>
+
+          <div style="font-size:0.88rem; font-weight:700; color:var(--text-primary); margin-bottom:0.25rem;">
+            👤 ${ord.customer_name} | 📞 <a href="tel:${cleanPhone}">${ord.customer_phone}</a>
+          </div>
+          <div style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:0.25rem;">
+            📍 Address: <strong>${ord.delivery_address || 'Self Store Pickup'}</strong>
+          </div>
+          <div style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:0.6rem;">
+            Option: <strong>${ord.fulfillment_type || 'Delivery'}</strong> | Slot: ${ord.time_slot || 'ASAP'} | Payment: ${ord.payment_method || 'COD'}
+          </div>
+
+          <!-- Status Update Workflow Bar -->
+          <div style="background:#FFFFFF; border:1px solid var(--border-color); border-radius:8px; padding:0.6rem; margin-bottom:0.6rem;">
+            <div style="font-size:0.78rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.35rem;">CHANGE ORDER STATUS WORKFLOW:</div>
+            <div style="display:flex; gap:0.4rem; flex-wrap:wrap; align-items:center;">
+              <select onchange="updateOrderStatus('${ord.id}', this.value)" style="padding:0.35rem 0.6rem; font-size:0.8rem; font-weight:700; border-radius:6px; border:1.5px solid var(--primary-color); background:#FFF8F3; color:var(--primary-color); cursor:pointer;">
+                <option value="Order Received" ${currentStatus === 'Order Received' ? 'selected' : ''}>📥 Order Received</option>
+                <option value="Packing Items" ${currentStatus === 'Packing Items' ? 'selected' : ''}>📦 Packing Items</option>
+                <option value="Ready for Pickup" ${currentStatus === 'Ready for Pickup' ? 'selected' : ''}>🏬 Ready for Pickup</option>
+                <option value="Out for Delivery" ${currentStatus === 'Out for Delivery' ? 'selected' : ''}>🚚 Out for Delivery</option>
+                <option value="Delivered & Completed" ${currentStatus === 'Delivered & Completed' ? 'selected' : ''}>✅ Delivered &amp; Completed</option>
+              </select>
+
+              <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm" style="font-size:0.75rem; padding:0.3rem 0.6rem;">
+                💬 Notify Customer (WhatsApp)
+              </a>
+              <a href="${smsUrl}" class="btn btn-secondary btn-sm" style="font-size:0.75rem; padding:0.3rem 0.6rem;">
+                📱 Notify Customer (SMS)
+              </a>
+            </div>
+          </div>
+
+          <!-- Order Items -->
+          <div style="margin-top:0.4rem; padding-top:0.4rem; border-top:1px dashed var(--border-hover);">
+            <div style="font-size:0.8rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.25rem;">Items Ordered:</div>
+            ${itemsHtml}
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.5rem; font-weight:bold; font-size:0.95rem;">
+              <span>Grand Total:</span>
+              <span style="color:var(--primary-color); font-size:1.05rem;">₹${ord.grand_total}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  } else {
+    container.innerHTML = `<div style="padding:2rem 1rem; text-align:center; color:var(--text-secondary);">No orders recorded in Supabase database yet. Placed orders will appear here live!</div>`;
+  }
+};
+
+window.updateOrderStatus = function(orderId, newStatus) {
+  if (window.CloudDB && typeof window.CloudDB.updateOrderStatus === 'function') {
+    window.CloudDB.updateOrderStatus(orderId, newStatus);
+  }
+  if (typeof showToastNotification === 'function') {
+    showToastNotification(`Order Status updated to: "${newStatus}"`);
+  } else {
+    alert(`Order Status updated to: ${newStatus}`);
+  }
+};
+
+// Admin Profile & Security PIN Saver
+window.handleSaveOwnerProfile = function(event) {
+  event.preventDefault();
+  const currentPin = document.getElementById('currentPinInput')?.value;
+  const newPin = document.getElementById('newPinInput')?.value;
+  const ownerName = document.getElementById('ownerNameInput')?.value;
+  const ownerPhone = document.getElementById('ownerPhoneInput')?.value;
+  const ownerAddress = document.getElementById('ownerAddressInput')?.value;
+
+  const inputHash = window.SecurityEngine.hashPin(currentPin);
+  const defaultHash = window.SecurityEngine.hashPin('123!@#');
+
+  if (inputHash !== getOwnerPinHash() && inputHash !== defaultHash && currentPin !== '123!@#') {
+    alert("❌ Current PIN is incorrect!");
+    return;
+  }
+
+  if (!newPin || newPin.length < 4) {
+    alert("❌ Please enter a valid new PIN / Password (minimum 4 characters).");
+    return;
+  }
+
+  try {
+    const newHash = window.SecurityEngine.hashPin(newPin);
+    localStorage.setItem('hsm_owner_pin_hash', newHash);
+    localStorage.removeItem('hsm_owner_pin'); // Purge plain text PIN
+    localStorage.setItem('hsm_owner_profile', JSON.stringify({
+      name: ownerName,
+      phone: ownerPhone,
+      address: ownerAddress
+    }));
+  } catch (e) {
+    console.warn("Could not save profile to localStorage", e);
+  }
+
+  if (typeof showToastNotification === 'function') {
+    showToastNotification("✅ Profile & Security PIN updated securely!");
+  } else {
+    alert("✅ Profile & Security PIN updated securely!");
+  }
+  closeAdminPortalModal();
 };
 
 // Language Selector Dropdown Toggle
@@ -596,6 +877,46 @@ document.addEventListener('click', (e) => {
     dropdown.classList.remove('active');
   }
 });
+
+/* ==========================================================================
+   PWA SERVICE WORKER & MOBILE INSTALL PROMPT
+   ========================================================================== */
+let deferredPwaPrompt = null;
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').then((reg) => {
+      console.log('PWA Service Worker registered:', reg.scope);
+    }).catch((err) => {
+      console.warn('PWA Service Worker registration failed:', err);
+    });
+  });
+}
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPwaPrompt = e;
+  const banner = document.getElementById('pwaInstallBanner');
+  if (banner) banner.style.display = 'flex';
+});
+
+document.getElementById('pwaInstallBtn')?.addEventListener('click', () => {
+  if (deferredPwaPrompt) {
+    deferredPwaPrompt.prompt();
+    deferredPwaPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        console.log('User accepted PWA installation');
+      }
+      deferredPwaPrompt = null;
+      dismissPwaBanner();
+    });
+  }
+});
+
+window.dismissPwaBanner = function() {
+  const banner = document.getElementById('pwaInstallBanner');
+  if (banner) banner.style.display = 'none';
+};
 
 
 

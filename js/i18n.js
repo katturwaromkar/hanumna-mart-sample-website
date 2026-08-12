@@ -1,7 +1,7 @@
 /* ==========================================================================
    SHREE HANUMAN SUPER MARKET - Full Internationalization (i18n) Engine
    Supports: English (en), Marathi (mr), Hindi (hi), Gujarati (gu)
-   Owner: Jitendra Bhanwarlal Unecha (+91 7083568189)
+   Owner: Jitendra Bhawarlal unecha (+91 7083568189)
    ========================================================================== */
 
 const translations = {
@@ -32,7 +32,7 @@ const translations = {
     heroBadge: "Tapodham Corner, Near Jijai Garden, Warje, Pune 411058",
     heroTitleMain: "Your Everyday",
     heroTitleSub: "Supermarket in Warje, Pune",
-    heroDesc: "Shri Hanuman Super Market (Managed by Jitendra Bhanwarlal Unecha) delivers fresh groceries, daily kitchen essentials, farm vegetables, branded cooking oils & household products right to your doorstep or ready for quick store pickup.",
+    heroDesc: "Shri Hanuman Super Market (Managed by Jitendra Bhawarlal unecha) delivers fresh groceries, daily kitchen essentials, farm vegetables, branded cooking oils & household products right to your doorstep or ready for quick store pickup.",
     feature1: "100% Quality Assured",
     feature2: "Honest Everyday Rates",
     feature3: "Open 7 AM – 10 PM Daily",
@@ -106,7 +106,7 @@ const translations = {
     receiptModalTitle: "🎉 Order Placed Successfully!",
     receiptModalSubtitle: "Your grocery bill receipt has been generated below.",
     receiptBadge: "TAX INVOICE / RECEIPT",
-    receiptStoreOwner: "Owner: Jitendra Bhanwarlal Unecha",
+    receiptStoreOwner: "Owner: Jitendra Bhawarlal unecha",
     receiptStorePhone: "Phone/WA: +91 70835 68189",
     receiptStoreAddress: "Address: Tapodham Corner, Near Jijai Garden, Warje, Pune",
     receiptCustHeader: "CUSTOMER DETAILS",
@@ -128,7 +128,7 @@ const translations = {
     storeLocationTitle: "Visit Our Store in Warje, Pune",
     storeLocationSubtitle: "Tapodham Corner, Tapodham Society, Near Jijai Garden, Warje, Pune 411058.",
     contactUsTitle: "Get in Touch with Owner",
-    contactUsSubtitle: "Managed by Jitendra Bhanwarlal Unecha. Open 7 AM to 10 PM daily.",
+    contactUsSubtitle: "Managed by Jitendra Bhawarlal unecha. Open 7 AM to 10 PM daily.",
     ownerNameLabel: "Proprietor / Owner",
     ownerPhoneLabel: "Call / WhatsApp",
     ownerAddressLabel: "Store Address",
